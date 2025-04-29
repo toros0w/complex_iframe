@@ -42,6 +42,19 @@ export default {
         };
       },
     },
+    InputMask: {
+      root: ({ context }) => {
+        return {
+          class: [
+            "border border-grey-400 rounded h-9 py-2 px-4",
+            "focus:!shadow-none focus:!border-green hover:!border-green",
+            context.disabled
+              ? "focus:!border-grey-400 hover:!border-grey-400 bg-[#F2F3F3]"
+              : "",
+          ],
+        };
+      },
+    },
     inputswitch: {
       root: { class: ["inline-block relative", "w-12 h-7"] },
       slider: ({ props }) => {
@@ -59,21 +72,21 @@ export default {
     dropdown: {
       root: {
         class: [
-          "border border-grey-400 rounded h-9 py-2 px-4 !shadow-none",
+          "border border-grey-400 rounded h-9 !shadow-none",
           "focus:!border-green focus:!shadow-none",
           "hover:!border-green active:!border-green",
         ],
       },
       wrapper: {
-        class: "border border-grey-400 rounded px-4 py-2",
+        class: "border border-grey-400 rounded",
       },
       trigger: {
         class: ["!w-max !ml-2"],
       },
       item: ({ context }) => ({
         class: [
-          "!text-sm !text-grey-900 !p-3",
-          context.selected ? "!bg-green-50" : "",
+          "!text-sm !text-grey-900 !p-3 !justify-between " ,
+          context.selected ? "!bg-stone-400" : "",
         ],
       }),
       input: {
@@ -86,16 +99,16 @@ export default {
     multiselect: {
       root: {
         class: [
-          "border border-grey-400 rounded h-9 py-2 px-4 !shadow-none",
+          "border border-grey-400 rounded h-9 py-2 px-4 !shadow-none w-full",
           "focus:!border-green focus:!shadow-none",
           "hover:!border-green active:!border-green",
         ],
       },
       wrapper: {
-        class: "border border-grey-400 rounded px-4 py-2 bg-white",
+        class: "border border-grey-400 rounded px-4 py-2 bg-white w-full",
       },
       trigger: {
-        class: ["!w-max"],
+        class: ["w-full"], // Убираем !w-max, чтобы заняло всю ширину
       },
       item: {
         class: "text-grey-900",
@@ -110,7 +123,7 @@ export default {
         ],
       }),
       input: {
-        class: ["!p-0 !text-sm !flex !items-center"],
+        class: ["!p-0 !text-sm !flex !items-center w-full truncate"],
       },
     },
     textarea: {

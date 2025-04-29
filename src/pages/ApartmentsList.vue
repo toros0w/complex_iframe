@@ -1,5 +1,6 @@
 <template>
   <div class="homePage relative bg-white flex justify-start items-start">
+    <!-- <IframeNavbar class="iframe-navbar-left"/> -->
     <div v-if="apartmentsLoader" class="loader-div">
       <img src="@/app/images/rocket-spinner.svg">
     </div>
@@ -53,6 +54,7 @@ import WindowInfoForList from "@/widgets/homePage/viewHome/windowInfoForList.vue
 import { copyObject, fixRoomVisible } from "@/shared/utils/util";
 import eventBus from "@/eventBus";
 import { useFieldsStore } from "@/app/store/fields";
+import IframeNavbar from "@/components/IframeNavbar.vue";
 const fieldsStore = useFieldsStore()
 
 const route = useRoute();
@@ -255,10 +257,11 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  /* overflow-x: hidden; */
 }
 .viewHome {
   position: relative;
-  width: 100%;
+  width: 80%;
   height: 100%;
   display: flex;
   justify-content: flex-start;
@@ -276,8 +279,20 @@ onUnmounted(() => {
   margin: auto;
 
   img {
-    width:150px;
+    width:110px;
     max-width: none;
   }
 }
+.iframe-navbar-left {
+  position: sticky;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
 </style>
+
+

@@ -18,4 +18,16 @@ module.exports = defineConfig({
     },
     sourceMap: false,
   },
+  devServer: {
+    client: {
+      overlay: false
+    },   
+    proxy: {
+      '^/ajax': {
+        target: 'http://localhost',
+        ws: true,
+        changeOrigin: true
+      },
+    }
+  }
 });

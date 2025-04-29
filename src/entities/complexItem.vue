@@ -29,7 +29,7 @@
     <RouterLink style="display: flex" :to="{path: complexLink, query: $route.query }">
     <div class="complexItem__content">
       <div class="complexItem__head">
-        <div v-if="!route.meta.isViewPage"class="complexItem__nav">
+        <div v-if="!route.meta.isViewPage" class="complexItem__nav">
           <div class="complexItem__develop" v-html="complex.builder.name"></div>
           <div class="complexItem__btnMenu">
             <Button style="background: transparent; border: none; padding: 0 !important" type="button" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
@@ -119,10 +119,10 @@
         </RouterLink>
       </div>-->
       <div class="complexItem__counts">
-        <RouterLink :to="{path: complexLink, query: $route.query }" class="complexItem__houseLink">
+        <RouterLink :to="{path: complexLink, query: $route.query }" class="complexItem__houseLink" style="width: 100px;">
           Домов: <strong>{{ complex.houses_total }}</strong>
         </RouterLink>
-        <RouterLink :to="apartmentsLink" class="complexItem__roomLink">
+        <RouterLink :to="apartmentsLink" class="complexItem__roomLink" style="width: 100px;">
           Помещений: <strong>{{ complex.total_rooms}}</strong>
         </RouterLink>
       </div>

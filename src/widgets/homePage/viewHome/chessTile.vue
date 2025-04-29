@@ -1,7 +1,8 @@
 <template>
   <div class="chessTile flex flex-col w-full justify-start items-center relative"
     :class="typeView === 'grid' ? 'typeGrid' : ''">
-    <div v-if="typeView === 'grid' || typeView === 'tile'"
+    <!-- ЕСЛИ НУЖНО ПОКАЗЫВАТЬ v-if="typeView === 'grid' || typeView === 'tile'" -->
+    <div v-if="typeView === 'never' || typeView === 'never'"
       class="flex flex-col items-center space-y-6 py-8 px-6 rounded-lg max-w-lg shadow-lg z-10 w-[300px] mb-5 sticky top-0 self-start p-[20px_30px_20px_30px] bg-white">
       <!-- Zoom Range Slider -->
       <div class="relative w-full">
@@ -24,7 +25,7 @@
     </div>
     <div class="chessTile flex flex-row w-full justify-start items-center relative">
       <div class="labelLeft h-full flex justify-center items-center">
-        <div class="text -rotate-90 text-grey-900">ЭТАЖИ</div>
+        <div class="hidden md:block text -rotate-90 text-grey-900">ЭТАЖИ</div>
       </div>
       <div ref="floorListLeft" class="chessTile__left mx-5 flex flex-col-reverse gap-y-2.5" v-if="!isDifferentFloors">
         <div class="row" v-for="index in floorsNumbers" :key="`floor${index}`">
@@ -41,7 +42,7 @@
           ref="chessTileTopScrollBar" @scroll="syncScroll('chessTileTopScrollBar')">
           <div class="topScrollBar" ref="topScrollBar"></div>
         </div>
-        <div class="chessTile__section flex flex-row w-max h-max" ref="zoomContainer">
+        <div class="chessTile__section flex flex-row w-max h-max" ref="zoomContainer" style="gap: 90px;">
           <div class="chessTile__section flex flex-col gap-y-2.5 w-max" v-for="entrance in entrances"
             :key="entrance.id">
             <div class="row flex flex-row gap-x-2.5">
@@ -63,11 +64,20 @@
                     :style="floor && floor.alignment == 'right' ? 'justify-content: end;' : 'justify-content: start;'"
                     style="width: 100%;">
                     <div v-for="(apartament, apartamentIndex) in floor.rooms"
-                      :key="`floor${index}apartament${apartamentIndex}`" class="cell text-white rounded cursor-pointer"
-                      :style="{ 'opacity': apartament.visible ? 1 : 0.1, 'background-color': `${apartament.complex_status_info?.status_color}` }"
-                      @click="emits('openWindow', apartament)">
+                        :key="`floor${index}apartament${apartamentIndex}`"
+                        class="cell text-white rounded cursor-pointer"
+                        :style="{
+                          'opacity': apartament.visible ? 1 : 0.1,
+                          'background-color': getBackgroundColor(apartament.complex_status_info?.status_type)
+                            // ? colorFree
+                            // : apartament.complex_status_info?.status_type == 'reservation'
+                            // ? colorRes
+                            // : apartament.complex_status_info?.status_color
+                        }"
+                        @click="emits('openWindow', apartament)">
                       {{ apartament.layout_feature === 'studio' ? 'ст' : apartament.rooms_count }}
                     </div>
+
                   </div>
                   <template v-else-if="props.typeView === 'grid' && floor">
                     <div style="display: flex !important; justify-content: start" :class="[
@@ -108,7 +118,7 @@
                         <div :class="[
                           'cell__countRoom min-w-6 min-h-6 rounded-3xl',
                           'flex justify-center items-center text-white',
-                        ]" :style="{ 'background-color': apartament.complex_status_info?.status_color }">
+                        ]" :style="{ 'background-color': getBackgroundColor(apartament.complex_status_info?.status_type) }">
                           {{ apartament.layout_feature !== 'studio' ? apartament.rooms_count + ' к' : 'cт' }}
                         </div>
                         <div style="text-wrap: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60px"
@@ -215,7 +225,7 @@
       </div> -->
       </div>
       <div class="labelRight h-full flex justify-center items-center">
-        <div class="text rotate-90 text-grey-900">ЭТАЖИ</div>
+        <div class="hidden md:block text -rotate-90 text-grey-900">ЭТАЖИ</div>
       </div>
     </div>
   </div>
@@ -260,6 +270,22 @@ const props = defineProps({
 const emits = defineEmits(
   ["openWindow"]
 );
+
+const colors = JSON.parse(localStorage.getItem("colors"));
+
+const statusMap = {
+  reservation: 'color_reserved',
+  available: 'color_free',
+  not_for_sale: 'not_for_sale',
+  sold: 'sold',
+}
+
+
+const getBackgroundColor = (statusType) => {
+  const colorKey = statusMap[statusType]
+  return colors[colorKey]
+}
+
 
 const pdfButton = ref({});
 const chessTileTopScrollBar = ref(null);
@@ -518,11 +544,11 @@ input[type="range"]::-ms-thumb {
   }
 
   &__main {
-    scrollbar-color: #9e9e9e #dedede;
+    scrollbar-color: var(--main-color) #dedede00;
     padding-bottom: 38px;
-
+    
     &::-webkit-scrollbar {
-      width: 100%;
+      width: 4px;
       height: 3px;
       border-radius: 3px;
       background-color: #dedede;
@@ -586,6 +612,13 @@ input[type="range"]::-ms-thumb {
         }
       }
     }
+  }
+}
+.cell--grid:hover {
+  background-color: var(--main-color);
+  color:#FFFFFF;
+  & .cell__number {
+    color: #FFFFFF!important;
   }
 }
 </style>

@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory, createWebHistory, RouterLink, Route
 
 const routes = [
   {
-    path: "/view",
+    path: "/:token/view",
     name: "view-pages",
     component: () => import("@/pages/View"),
     meta: {
@@ -41,103 +41,21 @@ const routes = [
                 name: "view-home",
                 component: () => import("@/pages/HomePage/ViewHome.vue"),        
               },
-            ]
+              {
+                path: "apartment/:apartment_id",
+                name: "apartment-detail",
+                component: () => import("@/pages/HomePage/ViewHome.vue"),
+              }
+              // {
+              //   path: "apartment-view/:apartment_id",
+              //   name: "apartment-view",
+              //   component: () => import("@/shared/layouts/ViewApartment.vue")
+              // }
+            ],
           }
         ]
       },
-      // {
-      //   path: "home/:id",
-      //   name: "home",
-      //   component: () => import("@/pages/HomePage.vue"),
-      //   children: [
-      //   ]
-      // }
     ],
-
-  },
-  {
-    path: "/my-objects",
-    name: "edit-pages",
-    component: () => import("@/pages/Edit"),
-    children: [
-      {
-        path: "",
-        name: "main",
-        component: () => import("@/pages/MainPage.vue"),
-      },
-      {
-        path: "import",
-        name: "import",
-        component: () => import("@/pages/ImportHomes.vue"),
-      },
-      {
-        path: ":id",
-        name: "complex-router",
-        component: RouterView,
-        children: [
-          {
-            path: '',
-            name: 'complex',
-            component: () => import("@/pages/ComplexPage.vue"),
-          },
-          {
-            path: 'apartments',
-            name: 'complex-apartments-edit',
-            component: () => import('@/pages/ApartmentsList.vue')
-          },
-          {
-            path: "home/:house_id",
-            name: "edit-home",
-            component: () => import("@/pages/HomePage.vue"),
-            children: [
-              {
-                path: "",
-                name: "homeMain",
-                component: () => import("@/pages/HomePage/MainPage.vue"),
-              },
-              {
-                path: "chess",
-                name: "chess",
-                component: () => import("@/pages/HomePage/ChessPage.vue"),
-              },
-              {
-                path: "view",
-                name: "viewHome",
-                component: () => import("@/pages/HomePage/ViewHome.vue"),        
-              },
-              {
-                path: "planLayout/:tab",
-                name: "planLayoutPage",
-                children: [
-                  {
-                    path: "",
-                    name: "planLayoutList",
-                    component: () => import("@/pages/HomePage/PlanLayoutPage.vue"),
-                  },
-                  {
-                    path: ":floor_plan_id",
-                    name: "editPlanFloors",
-                    component: () => import("@/pages/EditPlanFloors.vue"),
-                    beforeEnter: (to, from, next) => {
-                      if (to.params.tab == 'floors') {
-                        next();
-                      } else {
-                        next(false);
-                      }
-                    },
-                  },
-                ],
-              },
-              {
-                path: "facades",
-                name: "facades",
-                component: () => import("@/pages/EditFacades.vue"),
-              },
-            ],
-          },
-        ]
-      },
-    ]
   },
   {
     path: "/archived-objects",
@@ -158,12 +76,20 @@ const routes = [
   },
   {
     path: "/:catchAll(.*)",
-    redirect: { path: '/my-objects' }
+    // redirect: { path: '/view' }
   },
+  {
+    path:"/test-layout",
+    component: () => import("@/shared/layouts/TestLayout.vue"),
+  },
+  {
+    path: "/access-denied",
+    component: () => import("@/shared/layouts/AccessDenied.vue"),
+  }
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory('/complexes-iframe/'),
   
   routes
 })

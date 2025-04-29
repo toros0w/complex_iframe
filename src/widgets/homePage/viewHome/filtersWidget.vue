@@ -1,7 +1,7 @@
 <template>
   <div class="filters viewHome__filters flex flex-col w-max bg-white">
     <div>
-      <div class="filters__content flex flex-row flex-wrap items-stretch gap-x-[80px] xl:gap-x-[50px] xl:gap-y-[20px] w-full pt-3.5">
+      <div class="filters__content flex flex-row flex-wrap items-stretch gap-x-3 xl:gap-x-[50px] xl:gap-y-[40px] w-full pt-3.5">
         <div class="filters__square flex flex-col h-full" v-if="roomTypesOptions.length">
           <label class="text-grey-900 mb-2">Тип объекта</label>
           <MultiSelect
@@ -17,28 +17,6 @@
             class="w-full md:w-20rem"
             :pt="multiSelectStyle"
           />
-        </div>
-
-        <div
-          v-if="showTypeRooms"
-          class="filters__roms flex flex-col justify-start items-start h-full w-max"
-        >
-          <label class="text-grey-900 mb-2">Количество комнат</label>
-          <div class="btns flex flex-row items-stretch grow h-full">
-            <SelectButton
-              v-model="filters.rooms"
-              :options="typeRooms"
-              option-label="name"
-              option-value="value"
-              multiple
-              aria-labelledby="multiple"
-              :pt="{
-                button: {
-                  class: ['2xl:!h-[37px] xl:!h-[37px] '],
-                },
-              }"
-            ></SelectButton>
-          </div>
         </div>
         <div class="filters__square flex flex-col h-full" v-if="decorations.length">
           <label class="text-grey-900 mb-2">Тип отделки</label>
@@ -65,34 +43,62 @@
             emptyFilterMessage="Ничего не найдено"
             optionValue="id"
             optionLabel="name"
-            placeholder=""
+            placeholder="Выберите вид"
             selectedItemsLabel="Выбрано: {0}"
             :maxSelectedLabels="1"
             class="w-full md:w-20rem"
             :pt="multiSelectStyle"
           />
         </div>
+        <div
+          v-if="showTypeRooms"
+          class="filters__roms flex flex-col justify-start items-start h-full w-max"
+        >
+          <label class="text-grey-900 mb-2">Количество комнат</label>
+          <div class="btns flex flex-row items-stretch grow h-full" style="gap: 10px;">
+            <template v-for="room in typeRooms" :key="room.value">
+              <!-- Если значение - число, фиксируем 37x37 -->
+              <SelectButton
+                v-if="['1', '2', '3', '4'].includes(room.value)"
+                v-model="filters.rooms"
+                :options="[room]"
+                option-label="name"
+                option-value="value"
+                multiple
+                aria-labelledby="multiple"
+                :pt="{
+                  button: {
+                    class: ['!w-[37px] !h-[37px] !min-w-[37px] !min-h-[37px] !max-h-[37px] !p-0'],
+                  },
+                }"
+              />
 
-        <div class="filters__square flex flex-col h-full">
-          <label class="text-grey-900 mb-2">Номер помещения</label>
-          <div class="inputs grid grid-cols-2 gap-x-2 grow">
-            <InputText
-              type="text"
-              v-model.number="filters.number"
-              placeholder=""
-              :pt="{
-                root: {
-                  class: [
-                    'h-full mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[150px]',
-                  ],
-                },
-              }"
-            />
+              <!-- Если значение - текст, даем авторазмер -->
+              <SelectButton
+                v-else
+                v-model="filters.rooms"
+                :options="[room]"
+                option-label="name"
+                option-value="value"
+                multiple
+                aria-labelledby="multiple"
+                :pt="{
+                  button: {
+                    class: ['px-3 py-2 !min-w-max !max-h-[37px]'],
+                  },
+                }"
+              />
+            </template>
           </div>
         </div>
+        <!-- <div class="filters__rooms flex flex-col">
+          <label class="text-grey-900 mb-2">Кол-во комнат</label>
+          <div class="inputs">
+            <SelectButton v-model="filters.rooms" :options="typeRooms" optionLabel="name" multiple aria-labelledby="multiple" />
+          </div>
+        </div> -->
       </div>
-      <div class="filters__content flex flex-row flex-wrap items-stretch gap-x-[80px] xl:gap-x-[50px] xl:gap-y-[20px] w-full pt-3.5">
+      <div class="filters__content flex flex-row flex-wrap items-stretch gap-x-3 xl:gap-x-[50px] xl:gap-y-[20px] w-full pt-3.5">
         <div class="filters__price max-w-[400px] flex flex-col h-full">
           <label class="text-grey-900 mb-2">Стоимость, руб.</label>
           <div class="inputs grid grid-cols-2 gap-x-2 grow h-full" style="display: flex; flex-direction: column; align-items: start; gap: 0.5rem;">
@@ -141,7 +147,7 @@
                 root: {
                   class: [
                     'h-full mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
@@ -154,7 +160,7 @@
                 root: {
                   class: [
                     'mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
@@ -172,7 +178,7 @@
                 root: {
                   class: [
                     'h-full mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
@@ -185,7 +191,7 @@
                 root: {
                   class: [
                     'mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
@@ -203,7 +209,7 @@
                 root: {
                   class: [
                     'h-full mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
@@ -216,46 +222,12 @@
                 root: {
                   class: [
                     'mt-0.5 placeholder:text-sm placeholder:text-grey-900',
-                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 max-w-[146px]',
+                    '2xl:h-full !py-2 xl:h-[37px] xl:!mt-0 w-[78px]',
                   ],
                 },
               }"
             />
           </div>
-        </div>
-      </div>
-      <div class="filters__content flex flex-row flex-wrap items-stretch gap-x-[80px] xl:gap-x-[50px] xl:gap-y-[20px] w-full pt-3.5">
-        <div class="filters__square flex flex-col h-full">
-          <label class="text-grey-900 mb-2">Площадка</label>
-          <MultiSelect
-              v-model="filters.adsTargets"
-              :options="adsTargets"
-              filter
-              emptyFilterMessage="Ничего не найдено"
-              optionValue="value"
-              optionLabel="name"
-              placeholder="Выберите площадку"
-              selectedItemsLabel="Выбрано: {0}"
-              :maxSelectedLabels="1"
-              class="w-full md:w-20rem"
-              :pt="multiSelectStyle"
-          />
-        </div>
-        <div class="filters__square flex flex-col h-full">
-          <label class="text-grey-900 mb-2">Рекламный статус</label>
-          <MultiSelect
-              v-model="filters.adsStates"
-              :options="adsStates"
-              filter
-              emptyFilterMessage="Ничего не найдено"
-              optionValue="value"
-              optionLabel="name"
-              placeholder="Выберите статус"
-              selectedItemsLabel="Выбрано: {0}"
-              :maxSelectedLabels="1"
-              class="w-full md:w-20rem"
-              :pt="multiSelectStyle"
-          />
         </div>
       </div>
       </div>
@@ -295,6 +267,15 @@ const props = defineProps(['filters', 'filteredCount'])
 const {filters} = toRefs(props);
 
 const isEmpty = ref(true);
+
+const roomOptions = ref([
+  { name: "Студия", value: "studio" },
+  { name: "1", value: "1" },
+  { name: "2", value: "2" },
+  { name: "3", value: "3" },
+  { name: "4", value: "4" },
+  { name: "5+ комнат", value: "5+ комнат" },
+]);
 
 const roomTypesOptions = computed(() => Object.entries(room_types).map(([room_key, room_value]) => ({
   key: room_key,
@@ -493,6 +474,11 @@ watch(showTypeRooms, (newValue) => {
     max-width: 100px !important
   }
 }
+@media (max-width: 950px) {
+  .head__foundText {
+    margin-bottom: 20px;
+  }
+}
 </style>
 
 <style>
@@ -500,7 +486,7 @@ watch(showTypeRooms, (newValue) => {
     border-radius: 6px !important;
     justify-content: space-between !important;
     padding: 8px !important;
-    width: 300px !important;
+    /* width: 300px !important; */
     height: 36px !important;
   }
   .viewHome__filters .p-placeholder, .viewHome__filters .p-multiselect-label {

@@ -2,12 +2,16 @@
   <Teleport to="body">
     <div id="popup" class="popup">
       <div class="popup__body">
-        <div class="popup__title">Подъезд {{ numberEntrance }}, Этаж {{ numberFloor }}</div>
+        <!-- Подъезд {{ numberEntrance }},  -->
+        <div class="popup__title">Этаж {{ numberFloor }}</div>
         <template v-if="rooms.length">
-          <div class="popup__listPartament">
-            <div v-for="(groupedRooms, index) of computedRooms" :key="index" class="partament" @click="$emit('openDetails')">
+          <div class="popup__room_info">
+            Свободно <span class="room_info_count_and_price">{{ rooms.length }}</span> квартир от <span class="room_info_count_and_price">{{ formatNumber(Math.min(...rooms.map((room) => room.total_amount || 0))) }} руб.</span>
+          </div>
+          <div class="popup__listPartament" style="display: flex; flex-direction: row;">
+            <div  v-for="(groupedRooms, index) of computedRooms" :key="index" class="partament" @click="$emit('openDetails')">
               <div class="icon">{{groupedRooms[0].layout_feature == 'studio' ? 'ст' : groupedRooms[0].rooms_count + ' к'}}</div>
-              <div class="text">{{groupedRooms.length}} помещени{{groupedRooms.length > 1 ? 'й' : 'е'}}, от {{ formatNumber(Math.min(...groupedRooms.map((room) => room.total_amount || 0))) }} &#8381;</div>
+              <div class="text">{{groupedRooms.length}}</div>
             </div>
           </div>
         </template>
@@ -60,7 +64,7 @@ const computedRooms = computed(() => {
   transform: translate(-50%, -50%);
   width: max-content;
   border-radius: 4px;
-  border: 1px solid #3e9842;
+  border: 1px solid var(--main-color);
   padding: 10px 18px 15px 24px;
 
   &__head {
@@ -104,7 +108,7 @@ const computedRooms = computed(() => {
         width: 32px;
         height: 32px;
         border-radius: 100%;
-        background-color: #a1ddfb;
+        background-color: var(--main-color);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -118,5 +122,8 @@ const computedRooms = computed(() => {
       }
     }
   }
+}
+.room_info_count_and_price {
+  color: var(--main-color)
 }
 </style>

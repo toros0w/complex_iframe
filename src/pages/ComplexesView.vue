@@ -1,7 +1,7 @@
 <template>
-  <div v-if="loaders.list" class="loader-div">
-    <img src="../app/images/rocket-spinner.svg">
-  </div>   
+  <!-- <div v-if="loaders.list" > -->
+    <img v-if="loaders.list" class="loader" src="../app/images/rocket-spinner.svg">
+  <!-- </div>    -->
   <ListItems v-else :isViewPage="true" />
 </template>
 
@@ -13,14 +13,17 @@ import ListItems from "@/widgets/ListItems.vue";
 </script>
 
 <style lang="scss">
-    .loader-div{
-        margin-left: 45%;
-        margin-right: 50%;
-        margin-top: 15%;
+    .loader{
+        width:110px;
+        max-width: none;
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        height: 1000px;
 
         img {
-            width:150px;
-            max-width: none;
+            /* width:110px;
+            max-width: none; */
         }
     }
 </style>

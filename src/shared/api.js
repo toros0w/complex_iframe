@@ -1,18 +1,26 @@
 import axios from "axios"
 // const URL = process.env.VUE_APP_API_URL;
-const URL = 'http://localhost';
+// const URL = 'https://joywork.ru';
+const URL = 'http://localhost:8080';
+// const URL = 'http://localhost';
+// const URL = 'https://dev.joywork.ru'
 
 
-console.log(URL, 'URL URL');
+// console.log(URL, 'URL URL');
 
 const api_instance =  axios.create({
-    baseURL: `${URL}/ajax/vue_ajax/complex_axios.php`
+    baseURL: `${URL}/ajax/vue_ajax/complex_axios.php`,
+    // withCredentials: true
 })
+
+api_instance.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 
 const get_user_id = () => {
     if (window.auth_user_id) {
         return window.auth_user_id
     }
+    console.log(window.auth_user_id, 'window.auth_user_id');
+    
     window.auth_user_id = document.getElementById('session_user_id').value
     return window.auth_user_id
 }
@@ -177,6 +185,16 @@ const getRoomFigures = (room_id) => callApi('get_room_figures', { room_id })
 
 const getFilterFields = (house_id) => callApi("get_filter_fields", { house_id }) 
 
+// Frame access
+
+const getFrameAccess = (token) => callApi("get_frame_access", { token })
+
+// Frame colors
+
+const getAllColors = (token) => callApi("get_frame_colors", { token })
+// Create requisition
+const createRequisition = (formData) => callWithFormData('create_requisition', formData)
+
 export default {
     URL,
     callApi,
@@ -258,5 +276,8 @@ export default {
     updateHouseImport,
     getHouseImportStatus,
     getRoomFigures,
-    getFilterFields
+    getFilterFields,
+    getFrameAccess,
+    getAllColors,
+    createRequisition
 }
