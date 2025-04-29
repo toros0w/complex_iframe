@@ -13,6 +13,7 @@ export const useFieldsStore = defineStore("fields", () => {
   const windowsPlacements = reactive([])
   const rf_regions = reactive([])
   const rayons = reactive([])
+  const complex_status  = reactive([])
   const currentRegionInfo = reactive({
     region_id: null,
     region_id_user: null,
@@ -23,19 +24,49 @@ export const useFieldsStore = defineStore("fields", () => {
     regions: [],
     regions_list: {}
   })
-  const complex_status = [];
+  setTimeout(() => {
+    const colors = JSON.parse(localStorage.getItem('colors'))
+    const resColor = colors.color_reserved
+    const freeColor = colors.color_free
+  
+    complex_status.value = [
+      {
+        name: 'Свободные',
+        status: 'available',
+        color: freeColor,
+      },
+      {
+        name: 'Забронированные',
+        status: 'reservation',
+        color: resColor,
+      },
+      {
+        name: 'Проданные',
+        status: 'sold',
+        color: '#757575',
+      },
+      {
+        name: 'Недоступные',
+        status: 'not_for_sale',
+        color: '#dedede',
+      },
+    ]
+  
+    console.log(complex_status, 'СТАТУСЫ СПУСТЯ СЕКУНДУ')
+  }, 1000)
+  
   const builders = reactive({
     list: [],
     options: []
   })
 
-  const fetchComplexStatuses = () => {
-    api.getComplexStatus().then((response) => {
-      if (response.data) {
-        complex_status.push(...response.data)
-      }
-    })
-  }
+  // const fetchComplexStatuses = () => {
+  //   api.getComplexStatus().then((response) => {
+  //     if (response.data) {
+  //       complex_status.push(...response.data)
+  //     }
+  //   })
+  // }
 
   const refetchDecorationsList = () => {
     api.getDecorations()
@@ -61,50 +92,50 @@ export const useFieldsStore = defineStore("fields", () => {
           complexes_types.push(...response.data)
         })
 
-      // api.getCountry()
-      //   .then((response) => {
-      //     // console.log(response, 'responseresponseresponseresponseresponse');
+      api.getCountry()
+        .then((response) => {
+          // console.log(response, 'responseresponseresponseresponseresponse');
           
-      //     countries.push(...response.data?.country)
-      //   })
+          countries.push(...response.data?.country)
+        })
 
-      // api.getRFRegions()
-      //   .then((response) => {
-      //     const currentRegion = response.data.regions.find(region => region.code == response.data.region_id_user)
+      api.getRFRegions()
+        .then((response) => {
+          const currentRegion = response.data.regions.find(region => region.code == response.data.region_id_user)
 
-      //     if (currentRegion) {
-      //       rayons.push(...currentRegion.rayons)
-      //     }
+          if (currentRegion) {
+            rayons.push(...currentRegion.rayons)
+          }
 
-      //     api.getMetro(response.data.region_id_user).then(metrosResponse => {
-      //       metros.push(...metrosResponse.data)
-      //     })
+          api.getMetro(response.data.region_id_user).then(metrosResponse => {
+            metros.push(...metrosResponse.data)
+          })
 
-      //     currentRegionInfo.region_id = parseInt(response.data.region_id_user)
-      //     currentRegionInfo.region_id_user = parseInt(response.data.region_id_user);
+          currentRegionInfo.region_id = parseInt(response.data.region_id_user)
+          currentRegionInfo.region_id_user = parseInt(response.data.region_id_user);
 
-      //     regionsInfo.regions.push(...response.data.regions)
-      //     regionsInfo.regions_list = response.data.regions_list
+          regionsInfo.regions.push(...response.data.regions)
+          regionsInfo.regions_list = response.data.regions_list
 
-      //     currentRegionInfo.kladr = regionsInfo.regions_list[currentRegionInfo.region_id].kladr
-      //     currentRegionInfo.label = regionsInfo.regions_list[currentRegionInfo.region_id].label
-      //   })
+          currentRegionInfo.kladr = regionsInfo.regions_list[currentRegionInfo.region_id].kladr
+          currentRegionInfo.label = regionsInfo.regions_list[currentRegionInfo.region_id].label
+        })
       
       api.getWindowsPlacements()
         .then((response) => {
           windowsPlacements.push(...response.data)
         })
 
-      // api.getBuilders()
-      //   .then((response) => {
-      //     builders.list = response.data.list
-      //     builders.options.push(...response.data?.options)
-      //   })
+      api.getBuilders()
+        .then((response) => {
+          builders.list = response.data.list
+          builders.options.push(...response.data?.options)
+        })
 
       
       fetchComplexSuggestions(!route.meta.isViewPage)
 
-      fetchComplexStatuses()
+      // fetchComplexStatuses()
   })
 
   const changeRegionInfoRegionId = (payload) => {

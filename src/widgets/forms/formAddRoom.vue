@@ -342,7 +342,7 @@
               </div>
               <div style="width: 225px" class="form__item wrapped">
                 <label for="ceiling_height">Высота потолков</label>
-                <InputNumber
+                <Textarea
                   :minFractionDigits="2"
                   fluid
                   style="width: 100%"
@@ -383,6 +383,7 @@ import InputNumber from "primevue/inputnumber";
 import { room_types } from "@/shared/utils/util";
 import api from "@/shared/api";
 import { useFieldsStore } from "@/app/store/fields";
+import Textarea from "primevue/textarea";
 
 const emits = defineEmits(["closeModel"]);
 

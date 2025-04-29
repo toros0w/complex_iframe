@@ -153,6 +153,7 @@ onMounted(async () => {
   width: 100%;
   height: max-content;
   overflow: auto;
+  overflow-x: hidden;
   @apply bg-white;
   border-radius: 4px;
   padding: 0;

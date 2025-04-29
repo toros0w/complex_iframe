@@ -50,7 +50,9 @@ const INITIAL_FILTERS = {
 export const useComplexStore = defineStore("object", () => {
   const route = useRoute()
   const router = useRouter()
-  
+  const agencyName = ref(null);
+  const agencyLogo = ref(null);
+  const agencyPhone = ref(null);
   const activeType = ref("tile");
   const activePage = ref(1);
   const totalRecords = ref(0);
@@ -171,6 +173,9 @@ async function getListComplex(withPage = true){
     )
       .then((response) => {
           var res = response.data;
+          agencyName.value = res.agency_name;
+          agencyLogo.value = res.agency_logo;
+          agencyPhone.value = res.agency_phone;
           complexes.value = res.list;
           totalRecords.value = res.total;
           allPages.value = res.allPages;
@@ -204,6 +209,9 @@ async function getArchivedListComplex(withPage = true){
   )
     .then((response) => {
         var res = response.data;
+        agencyName.value = res.agency_name;
+        agencyLogo.value = res.agency_logo;
+        agencyPhone.value = res.agency_phone;
         archivedComplexes.value = res.list;
         archivedTotalRecords.value = res.total;
         archivedAllPages.value = res.allPages;
@@ -244,6 +252,9 @@ async function getArchivedListComplex(withPage = true){
     totalRecords,
     activeComplex,
     setActiveComplex,
-    clearFilters
+    clearFilters,
+    agencyName,
+    agencyLogo,
+    agencyPhone
   };
 });

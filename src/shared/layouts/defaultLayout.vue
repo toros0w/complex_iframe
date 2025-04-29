@@ -6,32 +6,35 @@
     />
   </Teleport>
   <div class="defaultLayout">
-    <header class="header">
-      <div class="header__top">
-        <div class="header__title">Жилые комплексы</div>
-      </div>
-      <div class="header__bottom">
-        <header-nav @changeOpen="formAddComplexOpen = !formAddComplexOpen" />
-        <header-type-grid />
-      </div>
-    </header>
-    <div class="navbar">
-      <div class="nav__logo">
-        <img src="" alt="" />
-      </div>
-      <button class="nav__btnAdd"></button>
-      <nav class="nav">
-        <ul class="nav__list">
-          <li class="list__item">
-            <RouterLink to="/my-objects"></RouterLink>
-          </li>
-        </ul>
-      </nav>
+    <!-- <IframeNavbar class="iframe-navbar-new" /> -->
+    <div class="layout">
+      <header class="header">
+        <div class="header__top">
+          <div class="header__title">Жилые комплексы</div>
+        </div>
+        <div class="header__bottom">
+          <header-nav @changeOpen="formAddComplexOpen = !formAddComplexOpen" />
+          <header-type-grid />
+        </div>
+      </header>
+      <!-- <div class="navbar">
+        <div class="nav__logo">
+          <img src="" alt="" />
+        </div>
+        <button class="nav__btnAdd"></button>
+        <nav class="nav">
+          <ul class="nav__list">
+            <li class="list__item">
+              <RouterLink to="/my-objects"></RouterLink>
+            </li>
+          </ul>
+        </nav>
+      </div> -->
+      <main class="w-full flex flex-col">
+        <Navigation />
+        <slot />
+      </main>
     </div>
-    <main class="w-full flex flex-col">
-      <Navigation />
-      <slot />
-    </main>
   </div>
 </template>
 
@@ -47,6 +50,7 @@ import HeaderNav from "@/widgets/header/header-nav.vue";
 import HeaderTypeGrid from "@/widgets/header/header-type-grid.vue";
 import FormAddComplex from "@/widgets/forms/formAddComplex.vue";
 import Navigation from "@/components/Navigation.vue"
+import IframeNavbar from "@/components/IframeNavbar.vue";
 
 const route = useRoute()
 
@@ -136,7 +140,6 @@ const setNavigation = () => {
       });
     }
   }
-
   navigateStore.setPages(pages);
 };
 
@@ -149,17 +152,24 @@ watch([storeCompex, house], ([compVal, houseVal]) => {
 </script>
 
 <style lang="scss" scoped>
+.iframe-navbar-new {
+  /* position: absolute; */
+}
 .defaultLayout {
   width: 100%;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  grid-template-rows: 139px 1fr;
+  display: flex;
+  /* grid-template-columns: 110px 1fr;
+  grid-template-rows: 139px 1fr; */
   // grid-row-gap: 30px;
   background-color: #f3f3f3;
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
   .header {
     width: 100%;
-    height: 100%;
+    height: auto;
     background-color: #ffffff;
     grid-column: 2;
     grid-row: 1;

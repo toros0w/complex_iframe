@@ -9,22 +9,23 @@
       </template>
     </div>
   </Teleport>
-  <div class="chessFloors relative">
+  <div class="chessFloors relative" :class="{mobile: isMobile}">
     <div
       v-show="headIsShow"
-      class="chessFloors__head col-span-2 flex flex-row justify-start items-center sticky top-0 bg-white z-10"
+      class="chessFloors__head col-span-2 flex flex-row max-[405px]:flex-col justify-start items-center sticky top-0 bg-white z-10"
     >
       <div v-if="activeFloor && listFloorIsShow" class="chessFloors__title text-2xl mr-12">План {{ activeFloor.position }} этажа</div>
       <Dropdown
-        v-if="listFloorIsShow"
+        v-if="listFloorIsShow && !isMobile"
         v-model="selectedEntranceID"
         :options="entrances"
         option-label="name"
         option-value="id"
         class="mr-12"
+        :class="{dropdown_mobile: isMobile}"
       ></Dropdown>
       <div
-        v-if="cardinalDirectionsIsShow"
+        v-if="cardinalDirectionsIsShow && !isMobile"
         class="w-full flex justify-center"
         style="align-items: center; flex-direction: column; gap: 10px; width: 120px; margin-top: 10px;"
       >
@@ -43,39 +44,32 @@
         "
         >Показать этаж на фасаде
       </MyButton> -->
-      <div class="chessFloors__resize" ref="zoomSlider"></div>
+      <div v-if="!isMobile" class="chessFloors__resize" ref="zoomSlider"></div>
     </div>
     <div
       v-if="selectedEntrance"
       v-show="listFloorIsShow"
       class="chessFloors__listFloor"
+      :class="{mobile: isMobile}"
     >
       <div
         v-for="floor in selectedEntrance.floors"
         :key="floor.id"
-        class="floor flex flex-row py-2.5 px-3 gap-4 text-grey-900 rounded-md w-max"
-        :class="
+        class="floor flex flex-row py-2.5 gap-2 text-grey-900 rounded-md w-max items-center floor_styles"
+        :class="[
           activeFloor.id === floor.id
-            ? 'bg-green text-white cursor-default'
-            : 'cursor-pointer'
-        "
+            ? 'main-bg text-white cursor-default'
+            : 'cursor-pointer',
+        ]"
         @click="activeFloor = floor"
       >
-        <div
-          class="after text-white"
-          :class="activeFloor.id !== floor.id ? 'hidden' : ''"
-        >
-          План
-        </div>
-        {{ floor.position }}
-        <div
-          class="before text-white"
-          :class="activeFloor.id !== floor.id ? 'hidden' : ''"
-        >
-          этажа
-        </div>
+        <span v-if="!isMobile && !isTablet && activeFloor.id === floor.id" class="hidden md:inline">План </span>
+        <span>{{ floor.position }}</span>
+        <span v-if="!isMobile && activeFloor.id === floor.id">этажа</span>
       </div>
     </div>
+    <div v-if="isMobile" class="chessFloors__resize" ref="zoomSlider"></div>
+
     <div
       class="chessFloors__mapFloor overflow-x-auto relative"
       ref="container"
@@ -90,6 +84,7 @@
 import { useFieldsStore } from "@/app/store/fields";
 import eventBus from "@/eventBus";
 import useViewFloors from "@/features/useViewFloors";
+import useWindowSize from "@/features/useWindowSize";
 import api from "@/shared/api";
 import { fixRoomVisible, formatNumber } from "@/shared/utils/util";
 import Dropdown from "primevue/dropdown";
@@ -138,10 +133,12 @@ const selectedEntrance = ref(null)
 const hoveredFigure = ref(null)
 const useViewFloor = useViewFloors();
 const fieldsStore = useFieldsStore()
+const { isMobile, isTablet} = useWindowSize()
 
 watch(selectedEntranceID, (id) => {
   selectedEntrance.value = entrances.value.find(entrance => entrance.id === id)
-  activeFloor.value = selectedEntrance.value.floors[selectedEntrance.value.floors.length - 1]
+  const activeFloorIndex = isMobile.value ? 0 : selectedEntrance.value.floors.length - 1
+  activeFloor.value = selectedEntrance.value.floors[activeFloorIndex]
 
 })
 
@@ -233,10 +230,23 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss">
+.floor_styles {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.chessFloors__listFloor {
+  max-width: 200px;
+}
 .chessFloors {
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-gap: 50px 40px;
+
+  &.mobile {
+    display: flex;
+    flex-direction: column;
+    grid-gap: unset;
+  }
 
   &__listFloor {
     width: 100%;
@@ -246,9 +256,19 @@ onUnmounted(() => {
     align-items: center;
     overflow-y: auto;
     row-gap: 30px;
-    padding-right: 30px;
-    scrollbar-color: #9e9e9e #dedede;
+    scrollbar-color: var(--main-color);
     padding-bottom: 38px;
+
+    &.mobile {
+      flex-direction: row;
+      height: unset;
+      align-items: center;
+      padding: 0px;
+      gap: 40px;
+      max-width: unset;
+      margin-top: 50px;
+    }
+
     &::-webkit-scrollbar {
       height: 100%;
       width: 3px;
@@ -348,14 +368,24 @@ onUnmounted(() => {
           }
           &-btns {
             button {
-              width: 30px;
-              height: 30px;
-              font-size: 20px;
+              width: 37px;
+              height: 37px;
+              font-size: 35px;
+              background-color: #DDDDDD;
+              color: #666666;
             }
           }
+
         }
       }
     }
+  }
+  @media (max-width: 405px) {
+    &__resize {
+      /* margin-left: 0!important; */
+      margin-left: auto;
+      margin-right: auto;
+    }  
   }
 }
 
@@ -417,5 +447,50 @@ onUnmounted(() => {
       display: none;
     }
   }
+}
+
+@media (max-width: 1920px) {
+  .chessFloors {
+    
+  grid-template-columns: 15vw 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .floor {
+    /* display: none; */
+  }
+}
+
+@media (max-width: 405px) {
+  .chessFloors__title {
+    font-size: 18px;
+    position: absolute;
+    left: 0;
+  }
+
+  .floor_styles {
+    max-width: 30px; 
+    max-height: 30px; 
+    padding-left: 0.65rem; 
+    padding-right: 0.75rem;
+  }
+
+  .dropdown_mobile {
+    margin-right: 0!important;
+    
+  }
+  /* .chessFloors__listFloor {
+    display: none;
+  } */
+
+  .chessFloors__mapFloor {
+    width: 405px;
+    height: 400px;
+  }
+}
+
+.ol-map__zoom-slider-thumb.ol-unselectable {
+  background-color: var(--main-color)!important;
 }
 </style>

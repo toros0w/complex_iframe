@@ -32,7 +32,7 @@ const route = useRoute()
         margin-top: 15%;
 
         img {
-            width:150px;
+            width:110px;
             max-width: none;
         }
     }

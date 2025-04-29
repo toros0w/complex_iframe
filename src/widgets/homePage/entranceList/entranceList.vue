@@ -419,7 +419,7 @@ watch(() => innerFloors, (oldValue, newValue) => {
 .loader-div {
   display: flex;
   justify-content: center;
-  margin-top: 150px;
+  margin-top: 110px;
 
   img {
     width:100px;

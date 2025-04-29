@@ -26,6 +26,7 @@ import {
   TSelect,
 } from "@/app/types/facadeViewCanvas";
 import { ref, watch } from "vue";
+import useWindowSize from "./useWindowSize";
 //import { Coordinate } from "ol/coordinate";
 
 /*export type Facade = {
@@ -35,6 +36,7 @@ import { ref, watch } from "vue";
 };*/
 
 export default function useViewFacades() {
+  const {isMobile} = useWindowSize()
   const mapObj = ref(null);
   const activeFacade = ref(0);
   const currentFacade = ref(null);
@@ -520,7 +522,8 @@ export default function useViewFacades() {
         currentCoordinate = coord;
       }
     });
-
+    console.log(mapObj.value.overlay.element.classList.add('mobile'));
+    
     mapObj.value.overlay.setPosition(currentCoordinate);
     // const popup = document.querySelector("#popup");
     popup.style.display = "block";

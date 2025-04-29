@@ -110,13 +110,14 @@ const deleteHouse = (house) => {
 </script>
 <style scoped lang="scss">
 .loader-div {
-  margin-left: 45%;
-  margin-right: 50%;
-  margin-top: 30px;
-  margin-bottom: 30px;
+  position: absolute;
+  margin-left: 50%;
+  /* margin-right: 50%; */
+  margin-top: 50%;
+  /* margin-bottom: 30px; */
 
   img {
-    width:150px;
+    width:110px;
     max-width: none;
   }
 }

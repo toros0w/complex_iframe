@@ -225,6 +225,9 @@ export default function useCanvas() {
   //   })
   // })
   function redraw(isHover, figureId) {
+
+    console.log('redrawing');
+    
     if (!ctx.value || !sourceImage.value || !canvas.value) return;
     canvas.value.width = sourceImage.value.naturalWidth;
     canvas.value.height = sourceImage.value.naturalHeight;

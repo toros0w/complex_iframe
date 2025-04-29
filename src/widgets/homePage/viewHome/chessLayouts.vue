@@ -1,7 +1,6 @@
 <template>
-  <div
-    class="chessLayouts grid grid-cols-4 gap-[25px] xl:grid-cols-3 xl:gap-[20px]"
-  >
+  <div class="chessLayouts grid grid-cols-1 gap-[25px] md:flex md:gap-[25px] xl:grid xl:grid-cols-3 xl:gap-[20px]">
+
     <ChessLayoutsItem
       v-for="plan in filteredPlans"
       :key="plan.id"
@@ -40,3 +39,4 @@ const emits = defineEmits(
   ["update:is-open-window"]
 );
 </script>
+

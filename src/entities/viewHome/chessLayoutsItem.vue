@@ -31,6 +31,7 @@
     </div>
     <div style="display: flex; flex-direction: column;">
 
+      <!-- :style="{ overflow: 'hidden' }" -->
     <Dropdown
       class="mb-2.5"
       :options="filteredRooms"
@@ -66,47 +67,121 @@
         </svg>
       </template>
       <template #value v-if="selectedPlanRoom">
-        <div class="chessLayoutsCart__status" :style="'background-color:' + selectedPlanRoom.complex_status_info?.status_color"></div>
-        <div class="chessLayoutsCart__price border-r border-grey-400 grow">
-          <div class="mainPrice font-bold mb-2">{{ formatNumber(selectedPlanRoom.total_amount) }} руб.</div>
-          <div class="desc text-xs">
-            {{selectedPlanRoom.area}} м2 <span class="text-grey-900">- {{formatNumber(((selectedPlanRoom.total_amount || 0) / (selectedPlanRoom.area || 0)).toFixed(2))}} руб./м2</span>
+        <div class="option-wrapper">
+            <div class="apart-info">
+              <div
+                class="apart-status"
+                :style="{ backgroundColor: getBackgroundColor(selectedPlanRoom.complex_status_info?.status_type) }"
+              ></div>
+              <div class="apart-price-wrapper">
+                <span class="mainPrice font-bold mb-2"
+                  >{{ formatNumber(selectedPlanRoom.total_amount) }} руб.</span
+                >
+                <div class="squere-info">
+                  <span class="squere">{{ selectedPlanRoom.area }} м2</span>
+                  <span class="dash"> - </span>
+                  <span class="price-squere"
+                    >{{formatNumber(((selectedPlanRoom.total_amount || 0) / (selectedPlanRoom.area || 0)).toFixed(2))}} руб./м2</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="apart-additional">
+              <div class="additional-wrapper">
+                <span class="floor">{{ selectedPlanRoom.floor }} этаж</span>
+                <span class="number">№{{ selectedPlanRoom.number }}</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="chessLayoutsCart__floor flex flex-col ml-5 py-1 xl:ml-2">
-          <div class="floor text-xs text-black mb-2.5">{{selectedPlanRoom.floor}} этаж</div>
-          <div class="numberRoom text-grey-900 text-xs">№ {{selectedPlanRoom.number}}</div>
-        </div>
       </template>
       <template #option="slotProps">
-        <div
-          class="chessLayoutsCart__status"
-          :style="'background-color:' + slotProps.option.complex_status_info.status_color"
-        ></div>
-        <div class="chessLayoutsCart__price border-r border-grey-400 grow">
-          <div class="mainPrice font-bold mb-2">
-            {{ slotProps.option.price }}
+        <div class="option-wrapper">
+            <div class="apart-info">
+              <div
+                class="apart-status"
+                :style="{ backgroundColor: getBackgroundColor(slotProps.option.complex_status_info.status_type) }"
+              ></div>
+              <div class="apart-price-wrapper">
+                <span class="mainPrice font-bold mb-2"
+                  >{{ formatNumber(slotProps.option.total_amount) }} руб.</span
+                >
+                <div class="squere-info">
+                  <span class="squere">{{ slotProps.option.area }} м2</span>
+                  <span class="dash"> - </span>
+                  <span class="price-squere"
+                    >{{formatNumber(((slotProps.option.total_amount || 0) / (slotProps.option.area || 0)).toFixed(2))}} руб./м2</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div class="apart-additional">
+              <div class="additional-wrapper">
+                <span class="floor">{{ slotProps.option.floor }} этаж</span>
+                <span class="number">№{{ slotProps.option.number }}</span>
+              </div>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M6.76693 8.7418L10.0003 11.9752L13.2336 8.7418C13.5586 8.4168 14.0836 8.4168 14.4086 8.7418C14.7336 9.0668 14.7336 9.59183 14.4086 9.91683L10.5836 13.7418C10.2586 14.0668 9.73362 14.0668 9.40862 13.7418L5.58359 9.91683C5.25859 9.59183 5.25859 9.0668 5.58359 8.7418C5.90859 8.42513 6.44193 8.4168 6.76693 8.7418Z"
+                  fill="#666666"
+                />
+              </svg>
+            </div>
           </div>
-          <div class="mainPrice font-bold mb-2">{{ formatNumber(slotProps.option.total_amount) }} руб.</div>
-          <div class="desc text-xs">
-            {{ slotProps.option.area }} м2
-            <span class="text-grey-900"
-              >-  {{formatNumber(((slotProps.option.total_amount || 0) / (slotProps.option.area || 0)).toFixed(2))}} руб./м2</span
-            >
+        <!-- <div class="info-wrapper" style="display: flex; gap: 10px;">
+
+          <div
+            class="chessLayoutsCart__status"
+            style="margin-top: 13px;"
+            :style="'background-color:' + slotProps.option.complex_status_info.status_color"
+          ></div>
+          <div class="chessLayoutsCart__price border-r border-grey-400 grow">
+            <div class="mainPrice font-bold mb-2">
+              {{ slotProps.option.price }}
+            </div>
+            <div class="mainPrice font-bold mb-2">{{ formatNumber(slotProps.option.total_amount) }} руб.</div>
+            <div class="desc text-xs">
+              {{ slotProps.option.area }} м2
+              <span class="text-grey-900"
+                >-  {{formatNumber(((slotProps.option.total_amount || 0) / (slotProps.option.area || 0)).toFixed(2))}} руб./м2</span
+              >
+            </div>
           </div>
         </div>
-        <div class="chessLayoutsCart__floor flex flex-col ml-5 py-1 xl:ml-2">
-          <div class="floor text-xs text-black mb-2.5">
-            {{ slotProps.option.floor }} этаж
+        <div class="option-additional-info" style="display: flex; gap: 10px; padding-left: 10px;
+        justify-content: center; align-items: center;">
+
+          <div class="chessLayoutsCart__floor flex flex-col ml-5 py-1 xl:ml-2">
+            <div class="floor text-xs text-black mb-2.5">
+              {{ slotProps.option.floor }} этаж
+            </div>
+            <div class="numberRoom text-grey-900 text-xs">
+              №{{ slotProps.option.number }}
+            </div>
           </div>
-          <div class="numberRoom text-grey-900 text-xs">
-            №{{ slotProps.option.number }}
-          </div>
-        </div>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M6.76693 8.7418L10.0003 11.9752L13.2336 8.7418C13.5586 8.4168 14.0836 8.4168 14.4086 8.7418C14.7336 9.0668 14.7336 9.59183 14.4086 9.91683L10.5836 13.7418C10.2586 14.0668 9.73362 14.0668 9.40862 13.7418L5.58359 9.91683C5.25859 9.59183 5.25859 9.0668 5.58359 8.7418C5.90859 8.42513 6.44193 8.4168 6.76693 8.7418Z"
+              fill="#666666"
+            />
+          </svg>
+        </div> -->
       </template>
     </Dropdown>
     <MyButton
       :theme="'green'"
+      :style="backgroundColor = { backgroundColor: 'var(--main-color)' }"
       class="!w-max !rounded-2xl mx-auto !px-5"
       @click="emits('openWindow', { ...selectedPlanRoom, complex_name: plan.complex_name, house_name: plan.house_name })"
       >Подробнее</MyButton
@@ -117,7 +192,83 @@
 
 <script setup>
 import { formatNumber } from "@/shared/utils/util";
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, ref, watch } from "vue";
+import 'perfect-scrollbar/css/perfect-scrollbar.css';
+
+
+// const dropdownRef = ref(null);
+let psInstance = null;
+
+const colors = JSON.parse(localStorage.getItem('colors')) || {}
+
+
+const statusMap = {
+  reservation: 'color_reserved',
+  available: 'color_free',
+  not_for_sale: 'not_for_sale',
+  sold: 'sold',
+}
+
+const getBackgroundColor = (statusType) => {
+  
+  const colorKey = statusMap[statusType]
+  return colors[colorKey]
+}
+
+// let wrapper = document.querySelector('[data-pc-section="wrapper"]');
+// if (wrapper.classList.contains('px-4')) {
+//   console.log('px-4px-4px-4px-4px-4px-4px-4px-4');
+  
+//   console.log(wrapper, 'wrappperrr');
+//   wrapper.classList.remove('px-4');
+//   wrapper.classList.add('px-0');
+// }
+
+const applyPerfectScrollbar = () => {
+  console.log('Applying Perfect Scrollbar...');
+  const panel = document.querySelector('.p-dropdown-panel');
+    
+    nextTick(panel.style.overflow = 'hidden')
+  const itemsWrapper = document.querySelector('.p-dropdown-items-wrapper');
+  console.log(itemsWrapper);
+
+  if (itemsWrapper) {
+    // panel.style.overflow = 'hidden';
+    // itemsWrapper.style.setProperty('max-height', '200px', 'important');
+    itemsWrapper.style.setProperty('overflow', 'hidden', 'important');
+
+    // Если экземпляр уже существует, уничтожаем его перед повторной инициализацией
+    if (psInstance) {
+      psInstance.destroy();
+      psInstance = null; // Обнуляем psInstance
+      console.log('PerfectScrollbar destroyed');
+    }
+
+    // Теперь создаем новый экземпляр
+    psInstance = new PerfectScrollbar(itemsWrapper, {
+      wheelSpeed: 0.08,
+      wheelPropagation: false,
+      minScrollbarLength: 5,
+    });
+
+    // Настройка внешнего вида полосы прокрутки
+    psInstance.scrollbarYRail.style.right = '10px';
+    psInstance.scrollbarYRail.style.top = '10px';
+    psInstance.scrollbarYRail.style.bottom = '10px';
+    psInstance.scrollbarYRail.style.maxHeight = '180px';
+    psInstance.scrollbarYRail.style.color = 'var(--main-color)';
+    psInstance.scrollbarYRail.style.backgroundColor = '#BDBDBD';
+    psInstance.scrollbarYRail.style.width = '4px';
+    psInstance.scrollbarY.style.backgroundColor = 'var(--main-color)';
+    psInstance.scrollbarY.style.width = '5px';
+    psInstance.scrollbarY.style.right = '0px';
+
+    console.log('PerfectScrollbar initialized:', psInstance);
+  }
+};
+
+
+
 
 const emits = defineEmits(
   ["openWindow"]
@@ -135,6 +286,7 @@ watch(filteredRooms, (newV, old) => {
 })
 
 onMounted(() => {
+  // applyPerfectScrollbar();
   if (!selectedPlanRoom.value.id) selectedPlanRoom.value = filteredRooms.value[0]
 })
 
@@ -143,6 +295,7 @@ onMounted(() => {
 <style scoped lang="scss">
 .chessLayoutsCart {
   width: 100%;
+  max-width: 489px!important;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -224,6 +377,7 @@ onMounted(() => {
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
+    flex-grow: 1;
   }
 
   &__status {
@@ -235,11 +389,101 @@ onMounted(() => {
   }
 
   &__price {
-    width: auto;
+    min-width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
   }
 }
+
+.ps__rail-y {
+  /* width: 200px!important; */
+}
+
+.chessLayoutsCart__price {
+  padding-right: 20px;
+}
+.option-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 28px;
+  width: 100%;
+  /* height: 70px; */
+  & .apart-info {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    & .apart-status {
+      min-width: 8px;
+      min-height: 8px;
+      max-width: 8px;
+      max-height: 8px;
+      border-radius: 50%;
+      /* position: absolute; */
+      /* left: 20px; */
+      /* top: 18px; */
+    }
+    & .apart-price-wrapper {
+      & .full-price {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333333;
+      }
+      & .squere {
+        font-size: 12px;
+        color: #333333;
+      }
+      & .price-squere {
+        font-size: 12px;
+        color: #757575;
+      }
+    }
+  }
+  & .apart-additional {
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+    padding-left: 20px;
+    border-left: 1px solid #dedede;
+    /* padding-right: 51px; */
+    gap: 24px;
+
+    & .additional-wrapper {
+      display: flex;
+      flex-direction: column;
+      /* gap: 18px; */
+      & .floor {
+        color: #333333;
+      }
+    }
+
+  }
+}
+
+@media (max-width: 768px) {
+  .chessLayoutsCart {
+    width: 341px;
+  }
+  .option-wrapper {
+    padding: 0!important;
+    padding-left: 10px!important;
+  }
+  .apart-price-wrapper {
+    padding-right: 10px;
+  }
+}
+
+@media (max-width: 767px) {
+  .chessLayoutsCart {
+    width: 100%;
+  }
+}
+@media (max-width: 500px) {
+  .chessLayoutsCart {
+    width: 341px;
+    
+  }
+}
+
 </style>

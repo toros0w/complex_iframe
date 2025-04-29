@@ -9,6 +9,12 @@
 
 :root {
   --main-color: #ED4B00;
+  --reservation-color: #f2b720;
+  --available-color: #4caf50;
+}
+
+.main-bg {
+  background-color: var(--main-color);
 }
 
 @include font-face("Lato", "Lato-Black", 900, "normal");
@@ -25,6 +31,7 @@ html {
   width: 100%;
   height: 100vh;
   overflow: hidden;
+  overflow-x: hidden;
 }
 
 .modelWindow {
@@ -101,6 +108,57 @@ img, video {
   }
 }
 
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  color: #FFFFFF!important;
+  background: var(--main-color)!important;
+}
+
 .p-dropdown-panel {
   max-width: 435px;
 }
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0!important;
+}
+
+.p-dropdown-items-wrapper {
+  overflow: hidden;
+}
+
+.primary-btn {
+  background-color: var(--main-color);
+  width: 207px;
+  height: 37px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid #DDDDDD;
+}
+
+/* Уменьшаем ширину скроллбара */
+::-webkit-scrollbar {
+  width: 4px; /* Тонкий скроллбар */
+  height: 4px;
+}
+
+/* Делаем трек (фон под скроллом) */
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Цвет фона скроллбара */
+  // border-radius: 10px;
+}
+
+/* Сама "ручка" (ползунок) */
+::-webkit-scrollbar-thumb {
+  background: var(--main-color); /* Цвет ползунка */
+  // border-radius: 10px; /* Закругляем края */
+}
+
+/* При наведении делаем ползунок темнее */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color);
+}
+// html {
+//   overflow-y: scroll; /* Всегда оставляет место для скролла */
+// }
