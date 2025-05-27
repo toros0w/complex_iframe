@@ -358,7 +358,7 @@ export default {
 }
 
 .form .p-inputswitch.p-focus .p-inputswitch-slider {
-  box-shadow: unset !important;
+  box-shadow: unset ;
 }
 
 .form input::placeholder {

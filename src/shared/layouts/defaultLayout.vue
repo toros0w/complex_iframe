@@ -73,6 +73,7 @@ onMounted(() => {
     complexStore.getArchivedListComplex()
   }
 })
+console.log(totalRecords , "totalRecordstotalRecords");
 
 const setNavigation = () => {
   const pages = [];

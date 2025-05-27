@@ -22,12 +22,12 @@ module.exports = defineConfig({
     client: {
       overlay: false
     },   
-    proxy: {
-      '^/ajax': {
-        target: 'http://localhost',
-        ws: true,
-        changeOrigin: true
-      },
-    }
+    // proxy: {
+    //   '^/ajax': {
+    //     target: 'https://dev.joywork.ru',
+    //     ws: true,
+    //     changeOrigin: true
+    //   },
+    // }
   }
 });

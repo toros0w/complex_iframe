@@ -15,7 +15,7 @@
   >
     <Tabs :tabs="tabs" :onClickTab="() => {openFullImage = false; openFullPlan = false; emits('full:plan-state-updated', false)}">
       <template #tab-0>
-        <div class="modelWindow__content">
+        <dv class="modelWindow__content">
           <div class="modelWindow__head">
             <div class="modelWindow__title mr-auto text-3xl">
               {{ room_types[apartment.type] }} №&nbsp;{{
@@ -335,7 +335,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </dv>
         <div
           v-if="apartment.plan_url"
           class="modelWindow__fullImage"
@@ -1156,22 +1156,20 @@ onUnmounted(() => {
     transition: 0.5s all ease-in-out;
     overflow: hidden;
     opacity: 0;
-
     &.open {
         visibility: visible;
-        width: 750px;
+        width: 100vw !important ;
         transition: 0.5s all ease-in-out;
         opacity: 1;
     }
 
     &.openFull {
-        width: 100%;
+      width: 100vw !important ;
     }
 
     &__content {
-        width: 100%;
-        height: 100%;
-        max-width: 750px;
+        width: 100vw !important ;
+        height: 100%;     
         padding: 50px;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -1450,21 +1448,22 @@ onUnmounted(() => {
     @media screen and (max-width: 1600px) {
         &.open {
             visibility: visible;
-            width: 550px;
+            width: 100vw !important;
             transition: 0.5s all ease-in-out;
         }
 
         &.openFull {
-            width: 100%;
+          width: 100vw !important;
         }
 
         &__content {
-            width: 100%;
+            width: 100vw !important;
             height: 100%;
-            max-width: 550px;
+            // max-width: 550px;
             padding: 30px;
             overflow-y: scroll;
             border-left: 1px solid #dedede;
+            border: 3px solid rgb(0, 255, 64) ;
         }
 
         &__fullImage {

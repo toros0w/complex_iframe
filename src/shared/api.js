@@ -1,12 +1,16 @@
 import axios from "axios"
 // const URL = process.env.VUE_APP_API_URL;
 // const URL = 'https://joywork.ru';
-const URL = 'http://localhost:8080';
+// const URL = 'http://localhost:8080';
 // const URL = 'http://localhost';
-// const URL = 'https://dev.joywork.ru'
+const URL = 'https://dev.joywork.ru';
 
 
 // console.log(URL, 'URL URL');
+
+// const api_instance = axios.create({
+//     baseURL: '/ajax/vue_ajax/complex_axios.php', 
+//   });
 
 const api_instance =  axios.create({
     baseURL: `${URL}/ajax/vue_ajax/complex_axios.php`,

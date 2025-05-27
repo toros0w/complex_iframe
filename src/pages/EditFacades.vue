@@ -8,6 +8,10 @@
     @update:visible="(visibleEditWindow = false), (activeFacade = null)"
     @save-facade="updateFacade"
   />
+  <div v-if="!showLoader" class="loader-div">
+    <RocketSpinner/>
+  </div>
+
 <div class="editFacades bg-white p-7.5 h-full">
   <div class="name text-[32px] mb-7.5">
     <span class="text-grey-900">Фасады:</span> {{complex.name}} —
@@ -161,13 +165,14 @@ import { computed, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import ConfirmPopup from "primevue/confirmpopup";
 import { useConfirm } from "primevue/useconfirm";
-
+import RocketSpinner from "@/components/RocketSpinner.vue";
 import { useHouseStore } from "@/app/store/house";
 
 import api from "@/shared/api";
 import { confirmpopupStyle } from "@/shared/utils/util";
 
 import WindowEditFacades from "@/widgets/editFacades/windowEditFacades.vue";
+const showLoader = ref(false)
 
 const route = useRoute()
 const facades = ref([]);
@@ -347,6 +352,7 @@ onMounted(async () => {
         }))
       }
     })
+
 })
 
 </script>

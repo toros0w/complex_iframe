@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[40px]">
+  <div class="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-[40px] appartmentMobile">
     <ApartmentIframe 
     v-for="room in filteredRooms" 
     :key="room.id" 
@@ -236,4 +236,29 @@ const rowClick = (apartament, event) => {
   gap: 70px;
   max-width: 100%;
 }
+
+.appartmentMobile{
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-bottom: 30px !important;
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 45px;
+  width: calc(100vw - 350px);
+  .apartment{
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px  ;
+  }
+}
+
+
+@media screen and (max-width:768px) {
+  .appartmentMobile {
+        justify-content: center !important;
+        width: 87vw;
+    }
+}
+
 </style>

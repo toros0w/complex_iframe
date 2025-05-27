@@ -1,29 +1,33 @@
 <template>
   <div v-if="isOpen" class="modal-overlay" @click.self="$emit('close')">
-    <div class="modal-content">
-      <span class="request-title">Записаться на просмотр</span>
+    <div  class="modal-content">
+      <div v-if="openCongMess" class="infoModal">
+        <div class="infoModal-content">
+          <p>Ваше заявка  отправлено</p>
+          <p>Скоро с вами свяжется наш менеджер!</p>
+        </div>
+      </div>
+      <span class="request-title">Забронировать</span>
       <div class="wrapper">
         <div class="request-row">
-          <span>ФИО:</span>
           <slot name="name-input">
             <InputText 
               id="fullName" 
               v-model="fullName" 
               @input="formatFullName" 
-              placeholder="Иванов Иван Иванович"
+              placeholder="Введите ваше имя"
               :class="errors.fullName ? 'input-error' : ''"
             />
           </slot>
         </div>
         
         <div class="request-row">
-          <span>Телефон:</span>
           <slot name="phone-input">
             <InputMask 
               id="phone" 
               v-model="phoneNumber" 
               mask="+7 (999) 999-9999" 
-              placeholder="+7 (999) 999-9999"
+              placeholder="+7 (999) 999-99-99 "
               :class="errors.phoneNumber ? 'input-error' : ''"
             />
           </slot>
@@ -66,10 +70,10 @@ export default {
     const errors = ref({ fullName: false, phoneNumber: false });
     const router = useRoute();
     const token = router.params.token || 'c5c567a2b70a0e1a83ae0c30e1ed677b';
-
+    const openCongMess = ref(false);
     const formatFullName = (event) => {
       let value = event.target.value;
-      value = value.replace(/[^А-Яа-яЁё\s-]/g, "");
+      value = value.replace(/[^А-Яа-яЁё\s-]/g, " ");
       value = value
         .split(/\s+/)
         .map((word) => (word ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase() : ""))
@@ -78,7 +82,7 @@ export default {
     };
 
     const validateForm = () => {
-      errors.value.fullName = fullName.value.trim().split(" ").length < 2;
+      errors.value.fullName = fullName.value.trim().split(" ").length < 1;
       errors.value.phoneNumber = !/^\+7 \(\d{3}\) \d{3}-\d{4}$/.test(phoneNumber.value);
       return !errors.value.fullName && !errors.value.phoneNumber;
     };
@@ -101,18 +105,21 @@ export default {
       try {
         const response = await api.createRequisition(formData);
         console.log("Ответ API:", response);
-        emit('close')
+        openCongMess.value = true;
+        setTimeout(() => {
+          emit('close')
+          openCongMess.value = false;
+                }, 3000);
         fullName.value = "";
         phoneNumber.value = "";
       } catch (error) {
         console.error("Ошибка при отправке заявки:", error);
       }
-    };
 
-    return { fullName, phoneNumber, formatFullName, submitForm, errors };
+    };
+    return { fullName, phoneNumber, formatFullName, submitForm, errors ,openCongMess };
   },
 };
-
 </script>
 
 <style scoped>
@@ -131,15 +138,17 @@ export default {
 
 .modal-content {
   position: relative;
-  width: 500px;
-  height: 250px;
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+    width: 600px;
+    height: 350px;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 25px;
+    align-items: center;
 }
 .request-title {
   font-size: 24px;
@@ -148,13 +157,20 @@ export default {
 .wrapper {
   display: flex;
   flex-direction: column;
+  width: 90%;
+
 }
 .request-row {
   display: flex;
   justify-content: space-between;
-  padding-right: 100px;
+  width: 100%;
   margin-bottom: 10px;
   align-items: center;
+  gap:20px;
+  input{
+    width: 100%;
+    height: 55px;
+  }
 }
 
 .close-req-btn {
@@ -169,5 +185,50 @@ export default {
 
 .input-error {
   border: 1px solid red;
+}
+
+.infoModal{
+  background: #ffffff;
+  width: 100%;
+  position: absolute;
+  height: 80%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.infoModal-content{
+  width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 21px;
+}
+
+
+@media screen and (max-width: 768px ) {
+  .modal-content{
+    width: 480px;
+    gap: 30px;
+    .request-title{
+      font-size: 18px;
+    }
+  }
+}
+@media screen and (max-width: 500px ) {
+  .modal-content{
+   gap: 10px;
+   width: 280px;
+   text-align: center;
+    input{
+      text-align: center;
+    }
+  }
+  .infoModal-content{
+    font-size: 16px;
+}
 }
 </style>

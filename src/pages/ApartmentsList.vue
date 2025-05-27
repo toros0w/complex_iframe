@@ -1,9 +1,9 @@
 <template>
   <div class="homePage relative bg-white flex justify-start items-start">
-    <!-- <IframeNavbar class="iframe-navbar-left"/> -->
     <div v-if="apartmentsLoader" class="loader-div">
-      <img src="@/app/images/rocket-spinner.svg">
+      <RocketSpinner/>
     </div>
+    <!-- <IframeNavbar class="iframe-navbar-left"/> -->
     <div
       class="viewHome flex flex-col w-full h-full min-h-full justify-start items-start px-7.5 py-5"
       ref="viewHome"
@@ -55,6 +55,7 @@ import { copyObject, fixRoomVisible } from "@/shared/utils/util";
 import eventBus from "@/eventBus";
 import { useFieldsStore } from "@/app/store/fields";
 import IframeNavbar from "@/components/IframeNavbar.vue";
+import RocketSpinner from "@/components/RocketSpinner.vue";
 const fieldsStore = useFieldsStore()
 
 const route = useRoute();
@@ -275,14 +276,7 @@ onUnmounted(() => {
     min-height: 700px;
   }
 }
-.loader-div {
-  margin: auto;
 
-  img {
-    width:110px;
-    max-width: none;
-  }
-}
 .iframe-navbar-left {
   position: sticky;
   top: 0;

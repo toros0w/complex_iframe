@@ -12,41 +12,17 @@
       :isOpen="formEditComplexOpen"
       @closeModel="() => {
         formEditComplexOpen = !formEditComplexOpen
-        complexToEdit = null
+        complexToEdit.value = null
       }"
       :complex="complexToEdit"
       @update-complex="onComplexUpdate"
     />
   </Teleport>
   <div class="wrapper">
-    <!-- <Panel collapsed toggleable>
-      <template #togglericon>
-        <div @click="collapsed = !collapsed" style="color: #757575">{{!collapsed ? 'Развернуть форму' : 'Свернуть форму'}}</div>
-        <SearchArrow />
-      </template>
-      <SearchForm @clear="complexHook.clearFilters" :filter="complex_filter" @onSubmit="() => complexHook.getListComplex(false)" />
-    </Panel> -->
     <div :class="['listItems', `listItems--${activeType}`]">
-      <!-- <ComplexItem
-        :complex="complex"
-        v-for="(complex) in complexes"
-        :onComplexEdit="() => {
-          complexToEdit = complex
-          formEditComplexOpen = true
-        }"
-        :onComplexArchive="() => complexToArchive = complex"
-        :key="complex.id"
-        :class="[
-          activeType === 'tile'
-            ? 'medium'
-            : activeType === 'table'
-            ? 'small'
-            : '',
-        ]"
-      /> -->
       <div class="company-complexes">
         <div class="company-logo">
-          <img :src="'https://joywork.ru/photos/agency/' + agencyLogo" alt="" class="company-logo-img">
+          <img :src="'https://dev.joywork.ru/photos/agency/' + agencyLogo" alt="" class="company-logo-img">
           <span class="company-name">{{ agencyName }}</span>
 
         </div>
@@ -77,7 +53,7 @@
             :settings="{
               location: {
                 center: center,
-                zoom: 9,
+                zoom:3,
               },
             }"
             
@@ -88,36 +64,6 @@
           <YandexMapControls :settings="{ position: 'left' }">
             <YandexMapZoomControl />
           </YandexMapControls>
-          <!-- <YandexMapDefaultMarker 
-          v-for="complex in complexes"
-          :key="complex.id"
-          :settings="{ 
-            coordinates: [complex.address.longitude, complex.address.latitude],
-            options: {
-            iconLayout: 'default#image',
-            iconImageHref: '@/shared/assets/images/ymarker.svg', // Указываем SVG-иконку
-            iconImageSize: [40, 40], // Размер маркера
-            iconImageOffset: [-20, -40] // Смещение (центрирование)
-          }
-
-          }"/> -->
-          
-          <!-- <YandexMapPlacemark
-            v-for="complex in complexes"
-            :key="complex.id"
-            :settings="{
-              coordinates: [complex.address.longitude, complex.address.latitude],
-              options: {
-                iconLayout: 'default#placemark',
-                iconImageHref: yMarker,
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40]
-              }
-            }"
-          /> -->
-          <!-- :settings="getCoordinates(complex) || [55.751574, 37.573856]" -->
-          <!-- :coords="[55.751574, 37.573856]" -->
-          <!-- position="top-center left-center" -->
           <YandexMapMarker
             v-for="complex in complexes"
             :key="complex.id"
@@ -142,7 +88,7 @@
             default: 'PageLinks'
         }"
         :rows="rowsComplex"
-        :totalRecords="totalRecords"
+        :totalRecords="totalRecords-1"
       >
       </Paginator>
 
@@ -185,14 +131,8 @@ import {
   getLocationFromBounds,
 } from 'vue-yandex-maps';
 
-
-// import { shallowRef } from 'vue';
-// const map = shallowRef<null | YMap>(null);
   const map = ref(null);
   const zoom = ref(9);
-  // const complexes = ref(null);
-  
-
   const selectComplex = (id) => {
     selectedComplexId.value = id;
   };
@@ -234,34 +174,13 @@ const windowWidth = ref(window.innerWidth);
 const filteredId = ref(null);
 const selectedComplexId = ref(null);
 
-// const resetFilter = () => {
-//   filteredId.value = null;
-// };
-
 
 const updateWindowWidth = () => {
   windowWidth.value = window.innerWidth;
 };
 
-// const testComplexes = ref(complexHook);
-
-// if (complexHook.value) {
-  
-//   console.log('test');
-// }
-
-// if (complexes.value) {
-//   const bounds = complexes.value.map(complex => [
-//       complex.address.longitude,
-//       complex.address.latitude
-//     ]);
-  
-//     console.log(bounds, 'boundsboundsbounds');
-  
-// }
-
 watch(windowWidth, (newVal) => {
-  if (newVal < 1024) {
+  if (newVal < 1200) {
     isLargeScreen.value = false; 
   } else {
     isLargeScreen.value = true; 
@@ -274,6 +193,9 @@ watch(windowWidth, (newVal) => {
 //   filteredComplex(id);
 // };
 
+const toggleMap = () => {
+  mapIsOpen.value = !mapIsOpen.value
+}
 const updateMapBounds = () => {
   if (!map.value || complexes.value.length === 0) return;
 
@@ -291,26 +213,12 @@ const updateMapBounds = () => {
   }
 };
 
-
-
-const toggleMap = () => {
-  mapIsOpen.value = !mapIsOpen.value
-
-}
-
 onMounted(() => {
   window.addEventListener('resize', updateWindowWidth);
   
-  if (windowWidth.value < 1024) {
+  if (windowWidth.value < 1200) {
     isLargeScreen.value = false;
-    
   }
-  
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateWindowWidth);
-  console.log('onBeforeUnmount');
   
 });
 
@@ -335,8 +243,9 @@ const mainColor = ref(null)
 
 const complexHook = useComplexStore();
 const complexesArray = computed(() => {
-  return Object.values(complexHook.complexes);
-})
+  const data = complexHook.complexes || {};
+  return Object.values(data);
+});
 
 const colors = localStorage.getItem("colors")
 console.log(colors);
@@ -345,12 +254,7 @@ mainColor.value = JSON.parse(colors).frame_color
 
 console.log(complexesArray.value.map(c => c.id), 'just log');  
 
-// const filteredComplex = (id) => {
-//   console.log(complexesArray.value.filter(c => c.id === id));
-  
-//   // return complexesArray.value.filter(c => c.id === id);
-  
-// }
+
 
 const filteredComplexesArray = computed(() => {
   
@@ -365,36 +269,6 @@ const filteredComplexesArray = computed(() => {
   console.log("Filtered complexes:", result);  // Логируем результат фильтрации
   return result;
 });
-
-// const filteredComplex = computed(() => {
-//   console.log('filtered complex');
-  
-//   return selectedComplexId.value ? complexes.value.filter(c => c.id === selectedComplexId.value) : complexes.value;
-// });
-
-console.log(complexesArray, 'complexesArraycomplexesArraycomplexesArray');
-
-
-
-// const bounds = complexesArray.map(complex => [
-//   complex.address.latitude,
-//   complex.address.longitude
-
-  
-// ]);
-
-console.log(complexesArray, 'complexesArraycomplexesArraycomplexesArray');
-// const coordinates = computed(() => {
-//   const latitudes = complexesArray.value.map((c) => c.address.latitude);
-//   const longitudes = complexesArray.value.map((c) => c.address.longitude);
-
-//   return [
-//     Math.min(...latitudes)], [Math.min(...longitudes), // Нижний левый угол
-//     Math.max(...latitudes)], [Math.max(...longitudes), // Верхний правый угол
-//   ];
-// });
-
-
 
 const coordinates = computed(() => {
   if (!complexesArray.value || complexesArray.value.length < 2) {
@@ -418,113 +292,20 @@ const coordinates = computed(() => {
     [Math.max(...latitudes), Math.max(...longitudes)],
   ];
 });
-
-const bounds = ref(getBoundsFromCoords(coordinates.value)).value; 
-const rawCenter = getCenterFromCoords(bounds);
-const center = ref([rawCenter[1], rawCenter[0]]).value;
-// const calculateBoundingBox = (coordsArray) => {
-//       let north = -Infinity;
-//       let south = Infinity;
-//       let east = -Infinity;
-//       let west = Infinity;
-
-//       coordsArray.forEach((coords) => {
-//         north = Math.max(north, coords[0]);
-//         south = Math.min(south, coords[0]);
-//         east = Math.max(east, coords[1]);
-//         west = Math.min(west, coords[1]);
-//       });
-
-//       return { north, south, east, west };
-//     };
-// const setOptimalZoom = (bounds, mapWidth = 1024, mapHeight = 768) => {
-//   if (!bounds || bounds.length !== 2) return { center: [55.751244, 37.618423], zoom: 9 }; // Дефолт Москва
-
-//   const [[lat1, lon1], [lat2, lon2]] = bounds;
-
-//   const west = Math.min(lon1, lon2);
-//   const east = Math.max(lon1, lon2);
-//   const south = Math.min(lat1, lat2);
-//   const north = Math.max(lat1, lat2);
-
-//   const center = [(west + east) / 2, (south + north) / 2];
-
-//   // Определяем ширину и высоту области в градусах
-//   const latDiff = Math.abs(north - south);
-//   const lonDiff = Math.abs(east - west);
-
-//   // Параметры карты
-//   const GLOBE_WIDTH = 360; // Ширина карты в градусах
-//   const GLOBE_HEIGHT = 180; // Высота карты в градусах
-
-//   // Рассчитываем масштаб карты по ширине и высоте
-//   const scaleX = mapWidth / GLOBE_WIDTH;
-//   const scaleY = mapHeight / GLOBE_HEIGHT;
-
-//   // Рассчитываем зум по горизонтали и вертикали
-//   const zoomX = Math.log2((GLOBE_WIDTH / lonDiff) * scaleX);
-//   const zoomY = Math.log2((GLOBE_HEIGHT / latDiff) * scaleY);
-
-//   // Определяем оптимальный зум, выбирая минимальный из горизонтального и вертикального
-//   let zoom = Math.min(zoomX, zoomY);
-
-//   // Преобразуем зум в целое число и округляем
-//   zoom = Math.floor(zoom);
-
-//   // Убедимся, что зум находится в допустимом диапазоне (если слишком большой, то уменьшаем)
-//   zoom = Math.max(zoom, 5);  // Минимум 5, чтобы не слишком близко
-//   zoom = Math.min(zoom, 18);  // Максимум 18, чтобы не слишком далеко
-
-//   console.log("Центр карты:", center);
-//   console.log("Рассчитанный зум:", zoom);
-
-//   return { center, zoom };
-// };
-
-
-// const testBounds = ref([
-//   [55.7, 37.5], // Координаты юго-западного угла (SW)
-//   [55.8, 37.6], // Координаты северо-восточного угла (NE)
-// ]);
-
-// async function updateMapView(bounds) {
-//   if (!bounds) return;
-
-//   const [[lat1, lon1], [lat2, lon2]] = bounds;
-//   center.value = [(lat1 + lat2) / 2, (lon1 + lon2) / 2]; // Центр bounds
-
-//   // Коэффициент зависимости зума от широты/долготы (эмпирически подобран)
-//   const latDiff = Math.abs(lat2 - lat1);
-//   const lonDiff = Math.abs(lon2 - lon1);
-//   const maxDiff = Math.max(latDiff, lonDiff);
-
-//   // Корректный расчет зума: чем больше разница, тем меньше зум (карта дальше)
-//   zoom.value = Math.floor(14 - Math.log2(maxDiff * 500)); // 500 — коэффициент подбора
-
-//   console.log("Центр карты:", center.value);
-//   console.log("Зум:", zoom.value);
-// }
-
-
-
-
-onMounted(() => {
-  // updateMapView(bounds);
-  // setOptimalZoom(bounds);
-  // console.log(center, 'center');
-  
+const bounds = computed(() => {
+  if (!coordinates.value) return null;
+  return getBoundsFromCoords(coordinates.value);
 });
 
-// const zoom = await getLocationFromBounds({
-//   bounds: {southWest:bounds[0], northEast:bounds[1]},
-//   roundZoom: true,
-//   comfortZoomLevel: true,
-// });
+const center = computed(() => {
+  if (!bounds.value) return [37.618423, 55.751244]; // fallback center
+  const rawCenter = getCenterFromCoords(bounds.value);
+  return [rawCenter[1], rawCenter[0]]; // convert from [lat, lon] to [lon, lat]
+});
+onMounted(() => {
 
+});
 
-
-
-// console.log(zoom, 'zoom');
 
 
 agencyName.value = complexHook.agencyName;
@@ -575,13 +356,6 @@ const onComplexArchive = () => {
     })
 }
 
-// const getCoordinates = (complex) => {
-  
-//   if (!complex || !complex.address) return null;
-//   const lat = Number(complex.address.latitude);
-//   const lon = Number(complex.address.longitude);
-//   return isNaN(lat) || isNaN(lon) ? null : [lat, lon];
-// }
 
 const getCoordinates = (complex) => {
   if (!complex || !complex.address) return null;
@@ -590,22 +364,6 @@ const getCoordinates = (complex) => {
   return [lat, lon];
 };
 
-// const getCoordinates = (complex) => {
-//   if (!complex || !complex.address) {
-//     console.warn("Complex without address:", complex);
-//     return [55.751574, 37.573856]; // Подставляем дефолтные координаты
-//   }
-
-//   const lat = Number(complex.address.latitude);
-//   const lon = Number(complex.address.longitude);
-
-//   if (isNaN(lat) || isNaN(lon)) {
-//     console.warn("Invalid coordinates for complex:", complex);
-//     return [55.751574, 37.573856]; // Подставляем дефолтные координаты
-//   }
-
-//   return [lat, lon];
-// };
 
 watch(
   complex_filter,
@@ -642,35 +400,6 @@ watch(
   { deep: true }
 );
 
-// const parseQueryFilters = () => {
-//   const multipleKeys = ['selectedTypes', 'selectedComplexTypes', 'rooms', 'rayons', 'selectedMetros', 'complexes', 'selectedDecorations']
-
-
-//   Object.entries(route.query).forEach(([key, value]) => {
-//     if (multipleKeys.includes(key)) {
-//       if (Array.isArray(value)) {
-//         value = value.map((num) => {
-//           if (!isNaN(+num)) {
-//             return parseInt(num)
-//           }
-
-//           return num
-//         });
-//       }
-
-//       if (typeof value == 'string' ) {
-//         if (!isNaN(+value)) {
-//           value = [parseInt(value)];
-//         } else {
-//           value = [value];
-//         }
-//       }
-//     }
-
-//     complex_filter.value[key] = value == 'true' ? true : value ==  'false' ? false : value 
-//   })
-// }
-
 onMounted(() => {
   nextTick(() => {
     updateMapBounds();
@@ -705,9 +434,9 @@ onMounted(() => {
     // grid-gap: 28px;
     & .company-complexes {
       margin-bottom: 40px;
-      width: 100%;
       // display: flex;
       padding: 50px 50px 0 50px;
+      width: 50%;
       & .company-logo {
         display: flex;
         align-items: center;
@@ -877,7 +606,7 @@ onMounted(() => {
     position: sticky;
     top: 0;
     right: 0;
-    width: 100vw;
+    width: 50%;
     height: 100vh;
     max-height: 100vh;
     background-size: cover;
@@ -934,7 +663,7 @@ onMounted(() => {
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .show-map-btn {
     display: flex;
   }
@@ -948,6 +677,7 @@ onMounted(() => {
   }
   .company-complexes{
     padding: 0;
+    width: 100% !important;
   }
 }
 
@@ -961,13 +691,3 @@ onMounted(() => {
 }
 
 </style>
-
-
-// .grayscale-map {
-//   filter: grayscale(100%);
-//   position: relative;
-// }
-// .grayscale-map .ymaps-2-1-79-image,
-// .grayscale-map .ymaps-2-1-79-ground-pane {
-//   filter: none !important;
-// }

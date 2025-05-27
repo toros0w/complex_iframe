@@ -1,30 +1,36 @@
 <template>
 
-  <!-- <div v-show="loadHome" class="loader-div"> -->
-    <img v-show="loadHome" class="loader" src="@/app/images/rocket-spinner.svg">
-  <!-- </div> -->
+  <div v-show="loadHome" class="loader-div ListHomeLoader">
+    <RocketSpinner/>
+  </div>
   <div v-if="!loadHome" class="listHome">
       <!-- <div class="listHome__title">Список домов</div> -->
       <div class="list-wrapper">
         <div class="listHome__list">
           <div class="company-logo">
             <!-- remove dev for prod or local -->
-            <img :src="'https://joywork.ru/photos/agency/' + data.agencyLogo" alt="" class="company-logo-img">
+            <img :src="'https://dev.joywork.ru/photos/agency/' + data.agencyLogo"   alt="" class="company-logo-img">
             <span class="company-name">{{ data.agencyName }}</span>
             
           </div>
           <Navigation />
-          <template v-if="activeListItem === 'activeHome'">
-             <homeItemIframe v-for="house in houses" :metros="metros" :key="house.id" :home="house" :minPrice="minPrice" :complexId="complexId"/>
+          <div class="show-map-btn" @click="toggleMap">
+            <MapIcon :mainColor="mainColor" :height="'24px'" :width="'24px'" />
+            <span v-if="!mapIsOpen">Посмотреть объекты на карте</span>
+            <span v-else>Скрыть карту</span>
+          </div>
+          <template v-if="activeListItem === 'activeHome' && !mapIsOpen">
+             <homeItemIframe v-for="house in houses" :metros="metros" :key="house?.id" :home="house" :minPrice="minPrice" :complexId="complexId"/>
           </template>
           <template v-else></template>
         </div>
-        <div class="yandex-map-wrapper" v-if="isLargeScreen || mapIsOpen" >
+        <div class="yandex-map-wrapper" v-if="isLargeScreen && !mapIsOpen || mapIsOpen" >
           <YandexMap
-          v-if="!loadHome"
+          v-show="!loadHome"
           ref="map"
             v-model="map"
             :settings="mapSettings"
+            :mapsRenderWaitDuration="1000"
             
             class="grayscale-map"
         >
@@ -33,38 +39,8 @@
           <YandexMapControls :settings="{ position: 'left' }">
             <YandexMapZoomControl />
           </YandexMapControls>
-          <!-- <YandexMapDefaultMarker 
-          v-for="complex in complexes"
-          :key="complex.id"
-          :settings="{ 
-            coordinates: [complex.address.longitude, complex.address.latitude],
-            options: {
-            iconLayout: 'default#image',
-            iconImageHref: '@/shared/assets/images/ymarker.svg', // Указываем SVG-иконку
-            iconImageSize: [40, 40], // Размер маркера
-            iconImageOffset: [-20, -40] // Смещение (центрирование)
-          }
-
-          }"/> -->
-          
-          <!-- <YandexMapPlacemark
-            v-for="complex in complexes"
-            :key="complex.id"
-            :settings="{
-              coordinates: [complex.address.longitude, complex.address.latitude],
-              options: {
-                iconLayout: 'default#placemark',
-                iconImageHref: yMarker,
-                iconImageSize: [40, 40],
-                iconImageOffset: [-20, -40]
-              }
-            }"
-          /> -->
-          <!-- :settings="getCoordinates(complex) || [55.751574, 37.573856]" -->
-          <!-- :coords="[55.751574, 37.573856]" -->
-          <!-- position="top-center left-center" -->
           <YandexMapMarker
-            v-for="marker in formattedCoords"
+            v-for="marker in formattedCoords.filter((el)=>el!==null)"
             :key="marker.id"
             :settings="{coordinates: marker}"
             :icon="require('@/shared/assets/images/ymarker.svg')"
@@ -87,6 +63,8 @@
   import MapIcon from "@/components/MapIcon.vue";
   // import { YMap } from '@yandex/ymaps3-types';
   import yMarker from '@/shared/assets/images/ymarker.svg';
+  import RocketSpinner from "@/components/RocketSpinner.vue";
+
   import {
     YandexMap,
     YandexMapDefaultSchemeLayer,
@@ -103,6 +81,7 @@
   import Navigation from "@/components/Navigation.vue";
 import { useComplexStore } from "@/app/store/complex";
 import { useRoute } from "vue-router";
+import { onUnmounted } from "vue";
       
   const props = defineProps({
     complex: null,
@@ -121,7 +100,7 @@ import { useRoute } from "vue-router";
   const mapCenter = [];
   const mainColor = ref(null)
   const mapIsOpen = ref(false);
-  const isLargeScreen = ref(true);
+  const isLargeScreen = computed(() => windowWidth.value >= 1200);
   const windowWidth = ref(window.innerWidth);
   const map = ref(null)
 
@@ -134,7 +113,7 @@ import { useRoute } from "vue-router";
   const mapSettings = computed(() => ({
     location: {
       center: center.value,
-      zoom: 19,
+      zoom: 14,
     },
   }));
   // console.log(mapSettings, 'settings');
@@ -168,32 +147,20 @@ import { useRoute } from "vue-router";
     windowWidth.value = window.innerWidth;
   };
 
-//   const filteredComplexesArray = computed(() => {
-  
-//   const selectedId = selectedComplexId.value?.id; // Если selectedComplexId - объект с полем id
-//   console.log("selectedId:", selectedId);
-//   console.log(selectedComplexId, 'selectedComplexId');
-  
-//   const result = selectedComplexId.value
-//     ? complexesArray.value.filter(c => c.id === selectedComplexId.value)
-//     : complexesArray.value;
-
-//   console.log("Filtered complexes:", result);  // Логируем результат фильтрации
-//   return result;
-// });
-
-  
-
   watch(windowWidth, (newVal) => {
-    if (newVal < 1024) {
+    if (newVal < 1200) {
       isLargeScreen.value = false; 
     } else {
       isLargeScreen.value = true; 
     }
   });
+  const toggleMap = () => {
+  mapIsOpen.value = !mapIsOpen.value
+}
 
   onMounted(() => {
-    
+    mapIsOpen.value = false
+    window.addEventListener('resize', updateWindowWidth);
   if (typeof window.ymaps === 'undefined') {
     const script = document.createElement('script');
     script.src = 'https://api-maps.yandex.ru/2.1/?apikey=692f0a05-cb88-4158-88b9-06bc0dc93004&lang=ru_RU';
@@ -211,7 +178,6 @@ function initGeocode() {
   
   window.ymaps.ready().then(() => {
     const geocodePromises = props.houses.map(complex => {
-      
       return window.ymaps.geocode(complex.address)
         .then(res => {
           const firstGeoObject = res.geoObjects.get(0);
@@ -230,20 +196,20 @@ function initGeocode() {
 
     Promise.all(geocodePromises).then(results => {
       console.log(geocodePromises, 'geocodePromises');
-      
-      
       markerCoords.value = results
       .filter(item => item.coords !== null)
       .map(item => item.coords);
       formattedCoords.value = markerCoords.value.map(coords => [coords[1], coords[0]]);
       
-      if (formattedCoords.value.length > 1) {
+      if (formattedCoords?.value.length > 1) {
         const bounds = ref(getBoundsFromCoords(formattedCoords.value)); 
         const rawCenter = getCenterFromCoords(bounds.value);
         center.value = [rawCenter[0], rawCenter[1]];
         console.log(center.value, 'center.value');
-      } else {
+      } else if(formattedCoords?.value.length === 1){
         center.value = formattedCoords.value[0];
+      }else{
+        console.log("   ");
       }
       
     });
@@ -256,20 +222,19 @@ function initGeocode() {
 watch(
   () => props.houses,
   (newHouses) => {
-    if (newHouses.length > 0) {
+    if (newHouses?.length > 0) {
       initGeocode();
     }
   },
   { deep: true, immediate: true }
 );
 
-
 watch(center, (newCenter) => {
   console.log('Обновился центр карты:', newCenter);
 });
 onMounted(async () => {
   // await initGeocode();
-  
+
   await nextTick();
 
   setTimeout(() => {
@@ -298,13 +263,43 @@ onMounted(async () => {
   const toggleHome = (tab) => {
     activeListItem.value = tab;
   }
-  
+  onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth);
+});
   
   </script>
   <style lang="scss">
   .listHome {
     position: relative;
   }
+
+  .show-map-btn {
+  cursor: pointer;
+  display: none;
+  width: 100%;
+  border: 1px solid var(--main-color);
+  border-radius: 6px;
+  padding: 8px 0;
+  margin-top: 28px;
+  gap: 12px;
+  justify-content: center;
+  color: var(--main-color);
+  align-items: center;
+  user-select: none;
+}
+
+ .listHome .yandex-map-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100vh;
+    max-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
   .loader {
     /* position: absolute; */
     /* top: 500px; */
@@ -320,17 +315,20 @@ onMounted(async () => {
       max-width: none; */
     }
   }
+  
   .list-wrapper {
     display: flex;
     width: 100vw;
     & .listHome__list {
-      padding: 0 50px 50px 50px;
-      height: max-content;
+      width: 50%;
+      padding:50px;
+      height:auto;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: start;
       position: relative;
       background-color: #fff;
+      margin-bottom: 10px;
       & .company-logo {
         display: flex;
         align-items: center;
@@ -380,10 +378,28 @@ onMounted(async () => {
       }
     }
 
-    @media screen and (max-width: 1180px) {
-      &__list {
-        // grid-template-columns: repeat(2, 1fr);
-      }
+    @media screen and (max-width: 1200px) {
+      .show-map-btn {
+        display: flex;
+  }
+  .listHome__list{
+    width: 100%;
+  }
+
+  .listHome .yandex-map-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100vh;
+    max-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+
+
+
     }
 
     @media screen and (max-width: 800px) {
@@ -392,11 +408,11 @@ onMounted(async () => {
       }
     }
   }
-  .yandex-map-wrapper {
-    position: sticky;
+   .listHome .yandex-map-wrapper {
+    position: fixed;
     top: 0;
     right: 0;
-    width: 100vw;
+    width: 50%;
     height: 100vh;
     max-height: 100vh;
     background-size: cover;
@@ -442,16 +458,21 @@ onMounted(async () => {
   filter: grayscale(100%) brightness(90%)!important;
 }
 
-@media (max-width: 1024px) {
-  .yandex-map-wrapper {
-    width: 100%!important;
-    height: 100vh;
-  }
-}
-@media (max-width: 1680px) {
-  .yandex-map-wrapper {
-    width: 50%;
-  }
+@media screen and (max-width: 1200px) {
+    .listHome .yandex-map-wrapper {
+        position: absolute;
+        top: 430px;
+        right: 0px;
+        left: 0px;
+        margin: auto;
+        width: 95vw;
+        height: 57vh;
+        max-height: 100vh;
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        margin-bottom: 100px;
+    }
 }
   </style>
   

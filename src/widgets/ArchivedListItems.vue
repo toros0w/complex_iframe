@@ -97,7 +97,7 @@ const first = ref(0);
 const fieldsStore = useFieldsStore()
 
 function clickPaginator(){
-  var pageNew = parseInt((first.value/rowsComplex.value) + 1);
+  var pageNew = parseInt((first.value/rowsComplex.value)+1);
   // emits('onPage', pageNew)
   activePage.value = pageNew;
   router.replace({query: { ...route.query, page: activePage.value }})
@@ -109,11 +109,10 @@ const onComplexArchive = (complex) => {
       var res = response.data;
       if(res.result=='done'){
         complexHook.getArchivedListComplex()
-        totalRecords.value = totalRecords.value + 1
+        totalRecords.value = totalRecords.value+1
       }
     })
 }
-
 const onComplexDelete = () => {
   api.deleteComplex(complexToDelete.value.id)
     .then((response) => {
@@ -202,7 +201,6 @@ const parseQueryFilters = () => {
 
 onMounted(() => {
   first.value = (activePage.value - 1) * rowsComplex.value
-
   fieldsStore.refetchDecorationsList()
 })
 

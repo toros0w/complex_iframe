@@ -21,14 +21,20 @@ watch(
 
 
     if (newParams.token) {
-      api.getFrameAccess(token).then(( response ) => {
+      api.getFrameAccess(token).then((response) => {
         console.log(response.data.access, 'response for access');
-        
-      if (response.data.access !== true) {
-        router.push('/access-denied');
-        return;
-      }
-    })
+
+        if (response.data.access !== true) {
+          router.push('/access-denied');
+          return;
+        }
+
+        console.log('log inside .then block'); 
+      });
+
+      // No use of `response` here
+      console.log('log in app.vue which is first'); 
+    }
     console.log('log in app.vue which is first');
     
     api.getAllColors(token)
@@ -53,11 +59,15 @@ watch(
           const freeColor = colors.color_free;
           const reservedColor = colors.color_reserved;
       
-          document.documentElement.style.setProperty("--main-color", frameColor)
+          document.documentElement.style.setProperty("--main-color", frameColor) 
         }
+        //  else {
+        //   document.documentElement.style.setProperty("--main-color", "#07a860") // frameColor
+        // }
+
     });
     }
-  },
+  ,
   { immediate: true }
 );
 

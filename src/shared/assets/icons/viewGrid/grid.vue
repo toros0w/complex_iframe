@@ -11,7 +11,8 @@
 <rect width="20" height="20" fill="white" transform="translate(0 0.5)"/>
 </clipPath>
 </defs>
-<script xmlns=""/></svg>
+  <!-- <script xmlns=""/> -->
+</svg>
 </template>
 
 <script>
