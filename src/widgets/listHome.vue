@@ -43,7 +43,7 @@
       </div>
     </nav>
     <div v-show="loadHome" class="loader-div">
-      <img src="../app/images/rocket-spinner.svg">
+      <RocketSpinner/>
     </div>
     <div v-show="!loadHome" class="listHome__list">
       <template v-if="activeListItem === 'activeHome'">
@@ -73,7 +73,7 @@ import { ref } from "vue";
 import homeItem from "@/entities/homeItem.vue";
 import api from "@/shared/api";
 import bus from "@/eventBus";
-
+import RocketSpinner from "@/components/RocketSpinner.vue";
 const props = defineProps({
   complex_id: 0,
   houses: [],
@@ -109,18 +109,7 @@ const deleteHouse = (house) => {
 
 </script>
 <style scoped lang="scss">
-.loader-div {
-  position: absolute;
-  margin-left: 50%;
-  /* margin-right: 50%; */
-  margin-top: 50%;
-  /* margin-bottom: 30px; */
 
-  img {
-    width:110px;
-    max-width: none;
-  }
-}
 .listHome {
   width: 100%;
   height: auto;

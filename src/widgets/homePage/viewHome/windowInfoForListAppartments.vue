@@ -303,6 +303,7 @@ const dropdownStyle = ref({
     overflow-y: scroll;
     max-height: 100vh;
     overflow: auto;
+    background-color: rgb(255, 255, 255);
   }
 
   &__fullImage {

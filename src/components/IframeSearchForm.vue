@@ -182,7 +182,7 @@
       </div>
       <button
         style="border-radius: 6px; height: 47px; border-color: #c68484;"
-        class="btnClearFilters bg-white border border-red text-sm px-4 py-2.5 text-red rounded-[30px] h-max self-end"
+        class="btnClearFilters bg-white border border-red text-sm px-4 text-red rounded-[30px] h-max self-end"
         @click="() => $emit('clear')"
       >
         Очистить фильтры
@@ -358,7 +358,7 @@ export default {
 }
 
 .form .p-inputswitch.p-focus .p-inputswitch-slider {
-  box-shadow: unset !important;
+  box-shadow: unset ;
 }
 
 .form input::placeholder {

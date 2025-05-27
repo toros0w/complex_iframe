@@ -1,4 +1,7 @@
 <template>
+    <!-- <div v-if="apartmentsLoader" class="loader-div">
+      <RocketSpinner/>
+    </div> -->
   <div class="navbar-wrapper">
     <div class="close-btn" @click="closeIframeNavbar">
       <span class="close-icon">&times;</span>
@@ -17,23 +20,15 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-
 export default {
   name: "IframeNavbar",
   props: {
-    visibility: Object, // Пропс с флагами видимости
+    visibility: Object,
   },
-  computed: {
-    filteredMenuItems() {
-      console.log(this.menuItems.filter(item => this.visibility[item.id]), 'this.menuItems.filter(item => this.visibility[item.id])');
-      console.log(this.visibility, 'visibility');
-      
-      return this.menuItems.filter(item => this.visibility[item.id]);
-    },
-  },
+  
   data() {
     return {
+      screenWidth: window.innerWidth,
       menuItems: [
         { 
           viewMode: {icon: "list", name: "Список", value: "list", visible: true}, 
@@ -45,12 +40,14 @@ export default {
           viewMode: {icon: "facades", name: "Фасады", value: "facades", visible: true}, 
           id: "facades", 
           text: "Фасады", 
-          icon: require("@/shared/assets/icons/iframeNavIcons/facades.svg") },
+          icon: require("@/shared/assets/icons/iframeNavIcons/facades.svg") 
+        },
         { 
           viewMode: {icon: "layouts", name: "Планировки", value: "layouts", visible: true}, 
           id: "plans", 
           text: "Планировки", 
-          icon: require("@/shared/assets/icons/iframeNavIcons/plate.svg") },
+          icon: require("@/shared/assets/icons/iframeNavIcons/plate.svg") 
+        },
         { 
           viewMode: {icon: "tile", name: "Плитка", value: "tile", visible: true}, 
           id: "plate", 
@@ -72,30 +69,46 @@ export default {
       ],
     };
   },
-  // {}
-  // icon: "layouts"
-  // name: "Планировки"
-  // value: "layouts"
-  // visible:true
+  computed: {
+    filteredMenuItems() {
+      return this.menuItems.filter(item => {
+        const isVisible = this.visibility[item.id];
+        const isFacadesHiddenOnSmallScreen = item.id === "facades" && this.screenWidth < 1210;
+        return isVisible && !isFacadesHiddenOnSmallScreen;
+      });
+    },
+  },
   methods: {
     changeViewMode(value) {
       this.$emit("view-mode-emit", value);
       this.$emit("update:viewType", value);
       this.$emit("closeIframeNavbar");
-      
     },
     closeIframeNavbar() {
       this.$emit("closeIframeNavbar");
+    },
+    updateScreenWidth() {
+      this.screenWidth = window.innerWidth;
     }
   },
+  
+  mounted() {
+    window.addEventListener("resize", this.updateScreenWidth);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.updateScreenWidth);
+  }
+  
 };
+
 </script>
+
 
 <style lang="scss">
 .navbar-wrapper {
   position: relative;
-  max-width: 350px;
-  min-width: 350px;
+  max-width: 300px;
+  min-width: 300px;
   height: 100vh;
   background: url('@/shared/assets/images/skyscraper.svg');
   background-color: var(--main-color);

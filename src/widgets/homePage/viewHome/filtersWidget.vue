@@ -34,22 +34,6 @@
             :pt="multiSelectStyle"
           />
         </div>
-        <div class="filters__square flex flex-col h-full" v-if="windowsPlacements.length">
-          <label class="text-grey-900 mb-2">Куда выходят окна</label>
-          <MultiSelect
-            v-model="filters.selectedWindowsPlacements"
-            :options="windowsPlacements"
-            filter
-            emptyFilterMessage="Ничего не найдено"
-            optionValue="id"
-            optionLabel="name"
-            placeholder="Выберите вид"
-            selectedItemsLabel="Выбрано: {0}"
-            :maxSelectedLabels="1"
-            class="w-full md:w-20rem"
-            :pt="multiSelectStyle"
-          />
-        </div>
         <div
           v-if="showTypeRooms"
           class="filters__roms flex flex-col justify-start items-start h-full w-max"
@@ -91,6 +75,23 @@
             </template>
           </div>
         </div>
+        <div class="filters__square flex flex-col h-full" v-if="windowsPlacements.length">
+          <label class="text-grey-900 mb-2">Куда выходят окна</label>
+          <MultiSelect
+            v-model="filters.selectedWindowsPlacements"
+            :options="windowsPlacements"
+            filter
+            emptyFilterMessage="Ничего не найдено"
+            optionValue="id"
+            optionLabel="name"
+            placeholder="Выберите вид"
+            selectedItemsLabel="Выбрано: {0}"
+            :maxSelectedLabels="1"
+            class="w-full md:w-20rem"
+            :pt="multiSelectStyle"
+          />
+        </div>
+       
         <!-- <div class="filters__rooms flex flex-col">
           <label class="text-grey-900 mb-2">Кол-во комнат</label>
           <div class="inputs">
@@ -102,7 +103,7 @@
         <div class="filters__price max-w-[400px] flex flex-col h-full">
           <label class="text-grey-900 mb-2">Стоимость, руб.</label>
           <div class="inputs grid grid-cols-2 gap-x-2 grow h-full" style="display: flex; flex-direction: column; align-items: start; gap: 0.5rem;">
-            <div style="display: flex; column-gap: .5rem;">
+            <div class="prceInputHolder" style="display: flex; column-gap: .5rem; ">
               <InputText
               type="text"
               v-model.number="filters.price.min"
@@ -466,14 +467,8 @@ watch(showTypeRooms, (newValue) => {
     align-items: center;
     justify-content: space-between;
   }
-
 }
 
-@media screen and (max-width: 1610px) {
-  .filters .p-inputtext {
-    max-width: 100px !important
-  }
-}
 @media (max-width: 950px) {
   .head__foundText {
     margin-bottom: 20px;
@@ -493,12 +488,59 @@ watch(showTypeRooms, (newValue) => {
     font-weight: 500;
     font-size: 16px;
     line-height: 19.2px;
-    color: #757575;
+    /* color: #757575; */
   }
 
-  .viewHome__filters .p-inputswitch.p-focus .p-inputswitch-slider {
-    box-shadow: unset !important;
+  .viewHome__filters  .p-inputswitch-slider {
+    box-shadow: unset ;
   }
+  
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
+    background-color: var(--main-color) !important;
+  }
+  .p-inputtext:enabled:focus{
+    border: 1px solid var(--main-color) !important;
+  }
+  .p-inputtext:enabled:hover{
+    border: 1px solid var(--main-color) !important;
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus{
+    border: 1px solid var(--main-color) !important;    
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-hover{
+    border: 1px solid var(--main-color) !important;    
+  }
+  .p-checkbox .p-checkbox-box.p-highlight {
+  background-color: var(--main-color);
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover{
+    border:1px solid var(--main-color);
+  }
+  .p-checkbox .p-checkbox-box.p-highlight{
+    border-color: var(--main-color);
+    background: var(--main-color);
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+    border-color: var(--main-color);
+    background: var(--main-color);
+    color: #ffffff;
+
+  }
+
+  .btns.flex.flex-row.items-stretch.grow.h-full{
+    .p-selectbutton .p-button.p-highlight {
+      background:var(--main-color);
+      border-color: var(--main-color);
+}
+.p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover{
+    background: var(--main-color);
+    border-color: var(--main-color);
+    & span{
+      color: #ffffff !important;
+    }
+}
+  }
+
 
   .custom-header {
     display: flex !important;
@@ -509,6 +551,84 @@ watch(showTypeRooms, (newValue) => {
   
     input {
       padding: 5px !important;
+      &:hover{
+        border: var(mainColor);
+      }
     }
   }
+  @media screen and (max-width:768px) {
+  .filters_content{
+    width: 390px;
+  }
+  .filters__square{
+    &:nth-child(2){
+      width: 156px;
+    }
+  }
+
+  .p-inputswitch.p-inputswitch-checked .p-inputswitch-slider{
+    background-color: var(--main-color) !important;
+  }
+  .p-inputtext:enabled:focus{
+    border: 1px solid var(--main-color) !important;
+  }
+  .p-inputtext:enabled:hover{
+    border: 1px solid var(--main-color) !important;
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus{
+    border: 1px solid var(--main-color) !important;    
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-hover{
+    border: 1px solid var(--main-color) !important;    
+  }
+  .p-checkbox .p-checkbox-box.p-highlight {
+  background-color: var(--main-color);
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover{
+    border:1px solid var(--main-color);
+  }
+  .p-checkbox .p-checkbox-box.p-highlight{
+    border-color: var(--main-color);
+    background: var(--main-color);
+  }
+  .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+    border-color: var(--main-color);
+    background: var(--main-color);
+    color: #ffffff;
+
+  }
+
+  .btns.flex.flex-row.items-stretch.grow.h-full{
+    .p-selectbutton .p-button.p-highlight {
+      background:var(--main-color);
+      border-color: var(--main-color);
+}
+.p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover{
+    background: var(--main-color);
+    border-color: var(--main-color);
+    & span{
+      color: #ffffff !important;
+    }
+}
+  }
+  input {
+      padding: 5px !important;
+      &:hover{
+        border: var(mainColor);
+      }
+    }
+    .filters__content{
+      width: 100vw;
+    }
+}
+
+@media screen and (max-width:425px){
+  .prceInputHolder{
+      width: 85vw;
+      justify-content: space-evenly;
+    }
+}
+.viewHome__filters{
+  width: 100vw !important;
+}
 </style>

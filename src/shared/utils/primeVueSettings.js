@@ -6,6 +6,11 @@ import { InputTextContext } from "primevue/inputtext";
 import { MessageProps } from "primevue/message";
 import { SelectButtonContext } from "primevue/selectbutton";
 //import { PTOptions } from "primevue/ts-helpers";
+var main_color 
+const colors = JSON.parse(localStorage.getItem('colors'));
+colors? main_color = colors.frame_color:setTimeout(() => {
+  window.location.reload()
+}, 5000);
 
 export default {
   pt: {
@@ -15,15 +20,15 @@ export default {
           class: [
             "rounded ",
             props?.severity === "success"
-              ? "!bg-green !text-white !shadow-none"
+              ? `!bg-${main_color} !text-white !shadow-none`
               : props?.severity === "danger"
               ? "!bg-red"
               : props?.severity === "info"
-              ? "!border !border-blue"
+              ? `!border !border-${main_color}`
               : props?.severity === "secondary"
               ? "!bg-gradient-to-r !from-[#FEFEFE] !to-[#F6F6F6] !border !border-grey-400 !text-grey-900 !shadow-none"
               : "",
-            props.link ? "!bg-transparent !text-green" : "",
+            props.link ? `!bg-transparent !text-${main_color}` : "",
             props.text ? "!p-0" : "!py-2 !px-3",
           ],
         };
@@ -34,7 +39,7 @@ export default {
         return {
           class: [
             "border border-grey-400 rounded h-9 py-2 px-4",
-            "focus:!shadow-none focus:!border-green hover:!border-green",
+            `focus:!shadow-none focus:!border-${main_color} hover:!border-${main_color}`,
             context.disabled
               ? "focus:!border-grey-400 hover:!border-grey-400 bg-[#F2F3F3]"
               : "",
@@ -47,7 +52,7 @@ export default {
         return {
           class: [
             "border border-grey-400 rounded h-9 py-2 px-4",
-            "focus:!shadow-none focus:!border-green hover:!border-green",
+            `focus:!shadow-none focus:!border-${main_color} hover:!border-${main_color}`,
             context.disabled
               ? "focus:!border-grey-400 hover:!border-grey-400 bg-[#F2F3F3]"
               : "",
@@ -64,7 +69,7 @@ export default {
             "transition-colors duration-200 rounded-2xl",
             "focus:outline-none focus:outline-offset-0 focus:shadow-none",
             "before:absolute before:content-'' before:top-1/2 before:bg-white before:dark:bg-gray-900 before:w-5 before:h-5 before:left-1 before:-mt-2.5 before:rounded-full before:transition-duration-200",
-            props.modelValue ? "!bg-green" : "!bg-grey-400",
+            props.modelValue ? `!bg-${main_color}` : "!bg-grey-400",
           ],
         };
       },
@@ -73,8 +78,8 @@ export default {
       root: {
         class: [
           "border border-grey-400 rounded h-9 !shadow-none",
-          "focus:!border-green focus:!shadow-none",
-          "hover:!border-green active:!border-green",
+          `focus:!border-${main_color} focus:!shadow-none`,
+          `hover:!border-${main_color} active:!border-${main_color}`,
         ],
       },
       wrapper: {
@@ -85,7 +90,7 @@ export default {
       },
       item: ({ context }) => ({
         class: [
-          "!text-sm !text-grey-900 !p-3 !justify-between " ,
+          "!text-sm !text-grey-900 !p-3 !justify-between ",
           context.selected ? "!bg-stone-400" : "",
         ],
       }),
@@ -100,8 +105,8 @@ export default {
       root: {
         class: [
           "border border-grey-400 rounded h-9 py-2 px-4 !shadow-none w-full",
-          "focus:!border-green focus:!shadow-none",
-          "hover:!border-green active:!border-green",
+          `focus:!border-${main_color} focus:!shadow-none`,
+          `hover:!border-${main_color} active:!border-${main_color}`,
         ],
       },
       wrapper: {
@@ -119,7 +124,7 @@ export default {
       item: ({ context }) => ({
         class: [
           "!text-sm !text-grey-900 !p-3",
-          context.selected ? "!bg-green-50" : "",
+          context.selected ? `!bg-${main_color}-50` : "",
         ],
       }),
       input: {
@@ -130,18 +135,16 @@ export default {
       root: { class: "border border-grey-400 rounded h-9 py-2 px-4" },
     },
     tabpanel: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headerTitle: (instance) => ({
         class: [
           instance.tabpanel.context.active
-            ? "font-semibold text-green"
+            ? `font-semibold text-${main_color}`
             : "font-normal text-black",
         ],
       }),
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       headerAction: (instance) => ({
         class: [
-          instance.tabpanel.context.active ? "!border-green" : "",
+          instance.tabpanel.context.active ? `!border-${main_color}` : "",
           "focus:!shadow-none",
         ],
       }),
@@ -157,7 +160,7 @@ export default {
           class: [
             "w-full !border !m-0",
             props.severity === "info"
-              ? "!bg-blue-100 !border !border-l !border-blue-500"
+              ? `!bg-${main_color}-100 !border !border-l !border-${main_color}-500`
               : "",
           ],
         };
@@ -189,7 +192,7 @@ export default {
         class: [
           "!border-r !border-solid !rounded focus:!shadow-none  h-full",
           "2xl:py-2.5 2xl:px-2.5 xl:py-1.5 xl:px-2.5",
-          context.active ? "!bg-green !border-green" : "!border-grey-400",
+          context.active ? `!bg-${main_color} !border-${main_color}` : "!border-grey-400",
         ],
       }),
       label: ({ context }) => ({

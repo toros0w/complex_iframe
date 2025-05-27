@@ -1,9 +1,5 @@
 <template>
   <div class="detail-apartment-wrapper">
-    <div class="detail-close-btn" @click="closeDetail">
-      <svg data-v-ff77da94="" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path data-v-ff77da94="" d="M22.8281 20L31.4141 11.4141C32.1953 10.6328 32.1953 9.36719 31.4141 8.58594C30.6328 7.80469 29.3672 7.80469 28.5859 8.58594L20 17.1719L11.4141 8.58594C10.6328 7.80469 9.36719 7.80469 8.58594 8.58594C7.80469 9.36719 7.80469 10.6328 8.58594 11.4141L17.1719 20L8.58594 28.5859C7.80469 29.3672 7.80469 30.6328 8.58594 31.4141C8.97656 31.8047 9.48828 32 10 32C10.5117 32 11.0234 31.8047 11.4141 31.4141L20 22.8281L28.5859 31.4141C28.9766 31.8047 29.4883 32 30 32C30.5117 32 31.0234 31.8047 31.4141 31.4141C32.1953 30.6328 32.1953 29.3672 31.4141 28.5859L22.8281 20Z" fill="#757575"></path></svg>
-    </div>
-
     <requestModal @close="closeReqModal" :isOpen="isReqOpen" :info="info" />
   <Teleport to="body">
     <div @click.stop="emits('update:is-open-window', { ...hoveredFigure.room, complex_name: apartment.complex_name, house_name: apartment.house_name, floor: activeFloor.position, entrance_name: apartment.entrance_name})" id="popup" class="popup" ref="popup">
@@ -15,7 +11,7 @@
       </template>
     </div>
   </Teleport>
-  <div class="apartment-number">Квартира {{ apartment.number }} </div>
+  <div class="apartment-number">Квартира{{ apartment.number }} </div>
   <div class="apartment-detail" style="justify-content: space-between;">
     <div class="apartment-image">
       <div class="apartment-status" :style="{ backgroundColor: getBackgroundColor(apartment.status_type) }">{{ apartment.status_name }}</div>
@@ -24,7 +20,7 @@
     <!-- <div class="vertical-line"></div> -->
     <div class="apartment-detail-info">
       <div class="sale-info">
-        Обратитесь в отдел продаж по телефону
+        Обратитесь в отдел продаж по телефону   
         <span>{{ formatPhone(agencyPhone) }}</span>
       </div>
       <div class="apartment-title">{{ room_types[apartment.type] }} в {{ apartment.house_name }}</div>
@@ -109,17 +105,11 @@ const closeReqModal = () => {
   isReqOpen.value = false
 }
 
-const closeDetail = () => {
-
-}
-
 const info = ref({});
 
 const hoveredFigure = ref(null)
 const agencyPhone = ref(null)
 agencyPhone.value = localStorage.getItem('agencyPhone') || ''
-
-console.log(complexHook, 'value hooke');
 
 const decorations = ref([])
 const activeFloor = ref(null)
@@ -219,6 +209,8 @@ onMounted(async () => {
   if (complexHook.agencyPhone) {
     agencyPhone.value = complexHook.agencyPhone
     localStorage.setItem('agencyPhone', complexHook.agencyPhone)
+    console.log(agencyPhone,"numberr");
+    
   }
 
   await api.getHouseFloorPlans(route.params.house_id)
@@ -244,6 +236,9 @@ onMounted(async () => {
     }) 
 })
 
+// console.log(agencyPhone);
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -252,13 +247,13 @@ onMounted(async () => {
   margin-bottom: 40px;
 }
 .apartment-detail {
-  width: 100vw;
+  width: 96vw;
   height: 100%;
   max-height: 609px;
   display: flex;
-  padding: 0 200px 0 200px;
+  justify-content: space-evenly;
+  gap: 50px;
 
-  /* justify-content: space-between; */
   & .vertical-line {
     width: 1px;
     background-color: #DEDEDE;
@@ -267,7 +262,6 @@ onMounted(async () => {
   }
   & .apartment-image {
     flex-shrink: 0;
-    aspect-ratio: 640 / 592;
     width: 100%;
     max-width: 640px;
     height: 592px;
@@ -292,8 +286,8 @@ onMounted(async () => {
     }
 
     & img {
-      width: 100%;
-      height: 100%;
+      width: 150%;
+      height: 150%;
       object-fit: contain;
     }
   }
@@ -390,6 +384,11 @@ onMounted(async () => {
     }
 
   }
+  .detail-bottom {
+  width: 100%;
+  height: auto;
+  margin-top: 600px !important;
+}
 }
 @media (max-width: 768px) {
   .apartment-detail {
@@ -404,6 +403,7 @@ onMounted(async () => {
 .detail-bottom {
   width: 100%;
   height: auto;
+  margin-top: 600px;
 }
 .chessFloors__resize {
   display: none;
@@ -474,16 +474,15 @@ onMounted(async () => {
 }
 .bottom-title {
   font-size: 32px;
-  margin-top: 40px;
+  margin-top: 10px;
+  padding-left: 115px;
 }
 .detail-apartment-wrapper {
   background-color: #ffffff;
   z-index: 1000;
   position: fixed;
-  left: -350px;
-  top: 0;
-  /* padding: 0 200px 0 200px ; */
-  padding: 50px;
+  inset: 0;
+  margin: auto;  
 }
 
 .detail-close-btn {

@@ -172,14 +172,15 @@ async function getListComplex(withPage = true){
       !route.meta.isViewPage
     )
       .then((response) => {
-          var res = response.data;
-          agencyName.value = res.agency_name;
-          agencyLogo.value = res.agency_logo;
-          agencyPhone.value = res.agency_phone;
-          complexes.value = res.list;
-          totalRecords.value = res.total;
-          allPages.value = res.allPages;
-
+        
+        var res = response.data;
+        agencyName.value = res.agency_name;
+        agencyLogo.value = res.agency_logo;
+        agencyPhone.value = res.agency_phone;
+        complexes.value = res.list;
+        totalRecords.value = res.total;
+        allPages.value = res.allPages;
+        
           const containers = document.getElementsByTagName('main');
 
           if (containers) {
@@ -188,11 +189,12 @@ async function getListComplex(withPage = true){
         
       })
       .catch(function(error) {
-          console.log(error);
+        console.log(error);
       })
       .finally(() => {
         loaders.list = false
       });
+      console.log(complexes.value  ,"res.listres.listres.listres.listres.listres.list");
 };
 
 async function getArchivedListComplex(withPage = true){

@@ -24,7 +24,7 @@
         class="mr-12"
         :class="{dropdown_mobile: isMobile}"
       ></Dropdown>
-      <div
+      <!-- <div
         v-if="cardinalDirectionsIsShow && !isMobile"
         class="w-full flex justify-center"
         style="align-items: center; flex-direction: column; gap: 10px; width: 120px; margin-top: 10px;"
@@ -35,7 +35,7 @@
           :src="require('@/shared/assets/images/said.png')"
           alt=""
         />
-      </div>
+      </div> -->
       <!-- <MyButton
         :theme="'green'"
         class="chessFloors__btn"
@@ -44,7 +44,7 @@
         "
         >Показать этаж на фасаде
       </MyButton> -->
-      <div v-if="!isMobile" class="chessFloors__resize" ref="zoomSlider"></div>
+      <div class="chessFloors__resize" ref="zoomSlider"></div>
     </div>
     <div
       v-if="selectedEntrance"
@@ -135,6 +135,8 @@ const useViewFloor = useViewFloors();
 const fieldsStore = useFieldsStore()
 const { isMobile, isTablet} = useWindowSize()
 
+const figuresData = ref([]);
+
 watch(selectedEntranceID, (id) => {
   selectedEntrance.value = entrances.value.find(entrance => entrance.id === id)
   const activeFloorIndex = isMobile.value ? 0 : selectedEntrance.value.floors.length - 1
@@ -143,14 +145,12 @@ watch(selectedEntranceID, (id) => {
 })
 
 const setHoveredFigureVisible = (id) => {
-  hoveredFigure.value = activeFloor.value.plan.figures.find((figure) => figure.id === id)
-  if(useViewFloor.hoveredFigure.value) {
-    useViewFloor.hoveredFigure.value.visible = hoveredFigure.value && hoveredFigure.value.room.visible 
+    hoveredFigure.value = activeFloor.value.plan.figures.find((figure) => figure.id === id)
+    if(useViewFloor.hoveredFigure.value) {
+      useViewFloor.hoveredFigure.value.visible = hoveredFigure.value && hoveredFigure.value.room.visible 
+    }
   }
-}
 watch(() => useViewFloor.hoveredFigure.value?.id_, setHoveredFigureVisible)
-
-const figuresData = ref([]);
 
 watch(figuresData, (value) => {
   const figures = props.customFigures ? props.customFigures : value
@@ -234,14 +234,13 @@ onUnmounted(() => {
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
-.chessFloors__listFloor {
-  max-width: 200px;
-}
 .chessFloors {
   display: grid;
   grid-template-columns: 200px 1fr;
   grid-gap: 50px 40px;
-
+  &.__head{
+    width: 75vw;
+  }
   &.mobile {
     display: flex;
     flex-direction: column;
@@ -257,7 +256,6 @@ onUnmounted(() => {
     overflow-y: auto;
     row-gap: 30px;
     scrollbar-color: var(--main-color);
-    padding-bottom: 38px;
 
     &.mobile {
       flex-direction: row;
@@ -271,15 +269,15 @@ onUnmounted(() => {
 
     &::-webkit-scrollbar {
       height: 100%;
-      width: 3px;
+      width: 10px;
       border-radius: 3px;
-      background-color: #dedede;
+      background-color: var(--main-color);
     }
     &::-webkit-scrollbar-thumb {
       width: 100%;
       height: auto;
       border-radius: 3px;
-      background-color: #9e9e9e;
+      background-color: #eeeeee;
     }
   }
 
@@ -379,15 +377,47 @@ onUnmounted(() => {
         }
       }
     }
+
   }
-  @media (max-width: 405px) {
+  @media (max-width: 455px) {
     &__resize {
       /* margin-left: 0!important; */
       margin-left: auto;
       margin-right: auto;
     }  
+    .chessFloors__title {
+    font-size: 18px;
+    left: 0;
+  }
+  .chessFloors__head {
+    width: 90% !important;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+
+  .floor_styles {
+    max-height: 30px; 
+    padding-left: 0.65rem; 
+    padding-right: 0.75rem;
+  }
+
+  .dropdown_mobile {
+    margin-right: 0!important;
+    
+  }
+
+  .chessFloors__mapFloor{
+        width: 370px;
+        height: 345px;  
+}
+  .chessFloors__resize .ol-map__zoom-btns button {
+  background-color: var(--main-color) !important;
+  color: white;
+}
   }
 }
+
 
 .ol-map {
   position: relative;
@@ -454,43 +484,56 @@ onUnmounted(() => {
     
   grid-template-columns: 15vw 1fr;
   }
+  .chessFloors__resize .ol-map__zoom-btns button {
+  background-color: var(--main-color) !important;
+  color: white;
+}
+
+}
+@media (max-width: 1200px) {
+  .chessFloors__head {
+        width: 70% !important;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+  .chessFloors__resize .ol-map__zoom-btns button {
+  background-color: var(--main-color) !important;
+  color: white;
+}
 }
 
 @media (max-width: 768px) {
   .floor {
     /* display: none; */
   }
+  .chessFloors__resize .ol-map__zoom-btns button {
+  background-color: var(--main-color) !important;
+  color: white;
+}
+.chessFloors{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .chessFloors__listFloor {
+        width: 55vw;
+        height: 50px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        overflow-x: scroll;
+        &::-webkit-scrollbar{
+          width: 20px;
+          height: 3px;
+          background-color: var(--main-color) !important;
+        }
+      }
+}
+.chessFloors__mapFloor{
+  width: 600px;
+  height: 600px;
 }
 
-@media (max-width: 405px) {
-  .chessFloors__title {
-    font-size: 18px;
-    position: absolute;
-    left: 0;
-  }
-
-  .floor_styles {
-    max-width: 30px; 
-    max-height: 30px; 
-    padding-left: 0.65rem; 
-    padding-right: 0.75rem;
-  }
-
-  .dropdown_mobile {
-    margin-right: 0!important;
-    
-  }
-  /* .chessFloors__listFloor {
-    display: none;
-  } */
-
-  .chessFloors__mapFloor {
-    width: 405px;
-    height: 400px;
-  }
-}
-
-.ol-map__zoom-slider-thumb.ol-unselectable {
-  background-color: var(--main-color)!important;
-}
 </style>

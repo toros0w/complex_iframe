@@ -17,7 +17,7 @@
     <Navigation v-if="filters.view.value === 'list'"/>
     <div class="viewHome__title text-[32px]" v-if="filters.view.value === 'list'">Список квартир</div>
     <div class="viewHome__title text-[32px]" v-else>Просмотр объектов</div>
-    <div class="head__top flex flex-row w-full items-center mb-7.5">
+    <div class="head__top flex flex-row items-center">
       <FilterWidget :filters="filters" :filteredCount="filteredCount" style="width: 100%;" />
 
 
@@ -29,14 +29,14 @@
           Очистить фильтры
         </button>
 
-        <div v-if="show_change_view" class="filters__view flex flex-col ml-auto z-20 self-start">
-          <!-- <label
+        <!-- <div v-if="show_change_view" class="filters__view flex flex-col ml-auto z-20 self-start">
+          <label
             class="mb-2"
             :class="[
               filters.view?.value === 'facades' ? 'text-white' : 'text-grey-900',
             ]"
             >Вид</label
-          > -->
+          >
           <Dropdown v-model="filters.view" :options="viewGrid" optionLabel="name" placeholder="Select a City"
             class="w-full md:w-14rem" :pt="{
               root: {
@@ -84,12 +84,12 @@
               </div>
             </template>
           </Dropdown>
-        </div>
+        </div> -->
       </div>
     </div>
 
     <div v-if="!route.meta.isViewPage" class="w-full items-center mb-7.5 complexItem__btnMenu">
-      <button style="border-radius: 6px; height: 47px; float: right; border-color: rgb(76, 175, 80);"
+      <button style="border-radius: 6px; height: 47px; float: right; border-color:var(--main-color);"
         class="btnClearFilters bg-white border text-sm px-4 py-2.5 rounded-[30px] h-max self-end"
               @click="toggle" aria-haspopup="true" aria-controls="overlay_menu">
         Реклама
@@ -463,7 +463,7 @@ const clearFilters = () => {
 
 <style>
 .viewHome__head .p-inputswitch.p-focus .p-inputswitch-slider {
-  box-shadow: unset !important;
+  box-shadow: unset ;
 }
 
 .custom-status-container::-webkit-scrollbar-thumb:hover {
@@ -481,6 +481,7 @@ const clearFilters = () => {
 }
 
 .head__top {
+  width:calc(100vw - 350px);
   display: flex;
   flex-wrap: wrap;
   position: relative;
@@ -499,6 +500,11 @@ const clearFilters = () => {
   cursor: pointer;  
 }
 
+.btnClearFilters{
+  width: 200px !important;
+  min-width: 200px !important;
+}
+
 @media(max-width: 950px) {
   .filter-bottom {
   position: absolute;
@@ -514,6 +520,7 @@ const clearFilters = () => {
  
 @media (max-width: 1024px) {
   .table__infoBlock {
+    margin-top: 60px;
     position: relative;
     /* flex-direction: column; */
     /* align-items: start; */
@@ -531,9 +538,18 @@ const clearFilters = () => {
     gap: 20px!important;
   }
 }
-@media (max-width: 402px) {
+@media (max-width: 410px) {
   .btnClearFilters {
     font-size: 13px;
+  }
+}
+
+@media screen and (max-width:768) {
+  .table__infoBlock{
+    width: 100vw;
+  }
+  .head__top {
+    width: 100vw;
   }
 }
 </style>

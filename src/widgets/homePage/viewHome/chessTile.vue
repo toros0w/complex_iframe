@@ -2,7 +2,7 @@
   <div class="chessTile flex flex-col w-full justify-start items-center relative"
     :class="typeView === 'grid' ? 'typeGrid' : ''">
     <!-- ЕСЛИ НУЖНО ПОКАЗЫВАТЬ v-if="typeView === 'grid' || typeView === 'tile'" -->
-    <div v-if="typeView === 'never' || typeView === 'never'"
+    <div v-if="typeView === 'grid' || typeView === 'tile'"
       class="flex flex-col items-center space-y-6 py-8 px-6 rounded-lg max-w-lg shadow-lg z-10 w-[300px] mb-5 sticky top-0 self-start p-[20px_30px_20px_30px] bg-white">
       <!-- Zoom Range Slider -->
       <div class="relative w-full">
@@ -10,13 +10,13 @@
         <div class="absolute left-0 top-1/2 w-full h-2 bg-gray-300 rounded-full transform -translate-y-1/2"></div>
 
         <!-- Active track -->
-        <div class="absolute top-1/2 h-2 bg-[#4caf50] rounded-full transform -translate-y-1/2 transition-all duration-0"
-          :style="{ width: (zoomLevel - 10) + '%' }"></div>
+        <div class="absolute top-1/2 h-2 rounded-full transform -translate-y-1/2 transition-all duration-0"
+          :style="{ width: (zoomLevel - 10) + '%' ,background:main_color}"></div>
 
         <!-- Slider thumb -->
         <div
-          class="absolute top-1/2 w-6 h-6 bg-[#4caf50] rounded-full shadow-md border-4 border-white transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-0"
-          :style="{ left: (zoomLevel - 10) + '%' }"></div>
+          class="absolute top-1/2 w-6 h-6  rounded-full shadow-md border-4 border-white transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-0"
+          :style="{ left: (zoomLevel - 10) + '%',background:main_color}"></div>
 
         <!-- Hidden input range -->
         <input type="range" v-model.number="zoomLevel" @input="showVal" min="10" max="100" step="1"
@@ -49,11 +49,11 @@
               <div class="cell text-grey-900 !w-max">{{ entrance.name }}</div>
             </div>
             <div class="flex">
-              <!-- <div class="flex flex-col-reverse gap-y-2.5" v-if="isDifferentFloors">
+              <div class="flex flex-col-reverse gap-y-2.5" v-if="isDifferentFloors">
               <div class="row" v-for="index in floorsNumbers" :key="`floor${index}`">
                 <div class="cell text-grey-900">{{ Number(index) }}</div>
               </div>
-            </div> -->
+            </div>
               <div class="flex flex-col-reverse gap-y-2.5">
                 <div class="row flex flex-row gap-x-2.5 w-100 !justify-start" v-for="index in floorsNumbers"
                   :set="floor = entrance.floors.find(floor => floor.position == index)" :key="index">
@@ -272,6 +272,7 @@ const emits = defineEmits(
 );
 
 const colors = JSON.parse(localStorage.getItem("colors"));
+const main_color = colors.frame_color
 
 const statusMap = {
   reservation: 'color_reserved',

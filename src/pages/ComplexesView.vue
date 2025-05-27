@@ -1,14 +1,14 @@
 <template>
-  <!-- <div v-if="loaders.list" > -->
-    <img v-if="loaders.list" class="loader" src="../app/images/rocket-spinner.svg">
-  <!-- </div>    -->
+  <div v-if="loaders.list" class="loader-div Loader_list">
+    <RocketSpinner/>
+  </div>
   <ListItems v-else :isViewPage="true" />
 </template>
 
 <script setup>
   import { useComplexStore } from "@/app/store/complex";
 import ListItems from "@/widgets/ListItems.vue";
-
+import RocketSpinner from "@/components/RocketSpinner.vue";
   const { loaders } = useComplexStore()
 </script>
 

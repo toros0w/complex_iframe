@@ -131,7 +131,7 @@
     </div>
   </div>
   <div v-else class="loader-div">
-    <img src="@/app/images/rocket-spinner.svg">
+    <RocketSpinner/>
   </div>
   <FormCopyRoom 
     :is-open="isCopyRoomModalOpen"
@@ -155,6 +155,7 @@ import AccordionFloors from "@/widgets/AccordionFloors/AccordionFloors.vue";
 import FormCopyRoom from "@/widgets/forms/formCopyRoom.vue";
 import eventBus from "@/eventBus";
 import api from "@/shared/api";
+import RocketSpinner from "@/components/RocketSpinner.vue";
 const isCopyRoomModalOpen = ref(false)
 const op = ref();
 const toggle = (event, entrance) => {
@@ -416,16 +417,7 @@ watch(() => innerFloors, (oldValue, newValue) => {
 </script>
 
 <style scoped lang="scss">
-.loader-div {
-  display: flex;
-  justify-content: center;
-  margin-top: 110px;
 
-  img {
-    width:100px;
-    max-width: none;
-  }
-}
 .entranceList {
   width: 100%;
   height: auto;

@@ -27,7 +27,7 @@
       </table>
       <table class="apartment-additional-info">
         <tr v-if="room.rooms_count">
-          <td class="td-title">Кол-во кsssssssssомнат</td>
+          <td class="td-title">Кол-во комнат</td>
           <td>{{ room.rooms_count }} ккв</td>
         </tr>
         <tr v-if="room.entrance_name">
@@ -56,7 +56,7 @@
       </table>
     </div>
     <div class="primary-btn apt" @click="emits('openApartment', room)">
-      Подробнее
+      Подробнее 
     </div>
   </div>
 </template>
@@ -207,5 +207,20 @@ const getAreaPrice = (area, total_amount) => {
       }
     }
   }
+
+
+
+}
+@media screen and (max-width:950px) {
+  .apartment{
+  padding: 20px 30px;
+    border: 1px solid #DEDEDE;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 351px;
+    width: 100%; 
+}
 }
 </style>
